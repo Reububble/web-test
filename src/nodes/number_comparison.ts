@@ -1,0 +1,39 @@
+import { defineNode } from "web/nodes/define_node.ts";
+import type { DataValues } from "web/nodes/declarative_node.ts";
+
+const inputs = { valueA: { label: "Value A", type: "number" }, valueB: { label: "Value B", type: "number" } } as const;
+
+export const NumberComparisonNode = defineNode({
+  kind: "data",
+  type: "number_comparison",
+  title: "Number Comparison",
+  inputs,
+  outputs: { result: { label: "Result", type: "boolean" } },
+  properties: (): DataValues<typeof inputs> & { operator: string } => ({ operator: "equals", valueA: 0, valueB: 0 }),
+  process: ({ valueA, valueB }, { properties }) => {
+    switch (properties.operator) {
+      case "equals":
+        return { result: valueA === valueB };
+      case "not_equals":
+        return { result: valueA !== valueB };
+      case "less":
+        return { result: valueA < valueB };
+      case "less_equal":
+        return { result: valueA <= valueB };
+      case "greater":
+        return { result: valueA > valueB };
+      case "greater_equal":
+        return { result: valueA >= valueB };
+      default:
+        throw new Error("Unknown number comparison operator.");
+    }
+  },
+  options: {
+    key: "operator",
+    label: "Compare",
+    choices: [["equals", "Equal (=)"], ["not_equals", "Not equal (≠)"], ["less", "Less than (<)"], ["less_equal", "Less than or equal (≤)"], [
+      "greater",
+      "Greater than (>)",
+    ], ["greater_equal", "Greater than or equal (≥)"]] as [string, string][],
+  },
+});
