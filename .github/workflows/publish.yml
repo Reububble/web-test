@@ -1,0 +1,50 @@
+name: Validate and publish
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.9.6
+      - uses: browser-actions/setup-firefox@v1
+        id: firefox
+      - name: Test library
+        run: deno task test
+        env:
+          FIREFOX_PATH: ${{ steps.firefox.outputs.firefox-path }}
+      - name: Check package
+        run: deno task publish:check
+
+  publish:
+    if: github.event_name == 'release'
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.9.6
+      - name: Verify release version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: >-
+          deno eval 'const { version } = JSON.parse(await Deno.readTextFile("deno.jsonc"));
+          if (Deno.env.get("RELEASE_TAG") !== `v${version}`) throw new Error(`Release tag must be v${version}`);'
+      - name: Publish to JSR
+        run: deno task publish:release
