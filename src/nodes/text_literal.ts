@@ -5,6 +5,7 @@ import { textInput } from "web-test/nodes/data_support.ts";
 
 const inputs: { readonly value: { readonly label: "Value"; readonly type: TypeDescriptor<string> } } = { value: { label: "Value", type: textInput } } as const;
 
+/** Node constructor. Provides a saved text literal as graph data. */
 export const TextLiteralNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly text: { readonly label: "Text"; readonly type: "text" } },

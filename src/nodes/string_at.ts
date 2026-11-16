@@ -1,5 +1,6 @@
 import { defineFunctionNode, type FunctionNodeConstructor } from "web-test/nodes/function_node.ts";
 
+/** Node constructor. Returns a string's UTF-16 code unit at an index and reports whether the index exists. */
 export const StringAtNode: FunctionNodeConstructor<{ text: string; index: number }, { text: string; found: boolean }> = defineFunctionNode({
   type: "string_at",
   title: "String At",

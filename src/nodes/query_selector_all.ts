@@ -8,6 +8,7 @@ const inputs: {
   readonly selector: { readonly label: "Selector"; readonly type: TypeDescriptor<string> };
 } = { flow: { label: "Flow", type: "flow" }, selector: { label: "Selector", type: nonemptyText } } as const;
 
+/** Node constructor. Finds all matching page elements and returns their ordered session-owned references. */
 export const QuerySelectorAllNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

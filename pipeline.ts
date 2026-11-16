@@ -1,12 +1,30 @@
+/**
+ * Execute saved Web Test graph files from Deno scripts and command-line applications.
+ *
+ * {@link runPipelineFile} reads and validates a serialized graph, executes its main
+ * flow and queued events, and closes its browser provider before settling.
+ * {@link PipelineOptions} configures the provider, deadline, cancellation signal,
+ * and log callback. Unhandled graph errors reject the returned promise.
+ *
+ * @example
+ * ```ts
+ * import { runPipelineFile } from "@reububble/web-test/pipeline";
+ *
+ * await runPipelineFile("pipeline.json", {
+ *   timeout: 30_000,
+ *   log: (message) => console.info(message),
+ * });
+ * ```
+ *
+ * @module
+ */
 import { parseValue } from "web-test/value.ts";
 import type { BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";
-/** Run graphs exported by Web Test Studio, with failure propagation and browser cleanup. @module */
 
 import { BrowserSession } from "web-test/runtime/browser.ts";
 import { GraphRun } from "web-test/runtime/graph_run.ts";
 import { Graph } from "web-test/graph.ts";
-/** Controls for executing a graph exported by Web Test Studio. */
-
+/** Browser ownership, cancellation, deadline, and logging options for a saved graph run. */
 export interface PipelineOptions {
   /** Browser provider chosen by the caller. The pipeline owns its lifecycle. */
   browser?: BrowserLifecycle;
@@ -19,8 +37,14 @@ export interface PipelineOptions {
 
   log?: (message: string) => void;
 }
-/**  * Run an exported JSON pipeline, rejecting on failure, timeout or cancellation.  * The pipeline owns its browser and always closes it before settling.  */
-
+/**
+ * Run a saved JSON graph and close its browser provider on completion or failure.
+ *
+ * @param file Path to a graph file encoded with the Web Test value codec.
+ * @param options Provider, timeout, cancellation signal, and log callback.
+ * @returns A promise that resolves after the main flow and queued events finish.
+ * @throws If the file is invalid, execution fails, the deadline expires, or the run is aborted.
+ */
 export async function runPipelineFile(file: string, options: PipelineOptions = {}): Promise<void> {
   const graph = Graph.deserialize(parseValue(await Deno.readTextFile(file)));
   const session = new BrowserSession(options.browser);

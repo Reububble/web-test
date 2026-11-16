@@ -1,4 +1,29 @@
-/** Browser automation and exported pipeline execution for Deno. @module */
+/**
+ * Browser sessions and caller-configured browser providers for Deno automation.
+ *
+ * {@link createBrowserSession} returns an {@link AutomationSession} that launches
+ * lazily on its first browser operation. Supply a {@link BrowserLauncher} with
+ * Puppeteer options, or implement {@link BrowserLifecycle} to own browser startup.
+ * Actions return named outputs and PNG screenshots through {@link ActionResult}.
+ *
+ * Close the session in a `finally` block. Importing this module starts no browser
+ * or server; browser installation and executable configuration are the caller's responsibility.
+ *
+ * @example
+ * ```ts
+ * import { BrowserLauncher, createBrowserSession } from "@reububble/web-test/browser";
+ *
+ * const session = createBrowserSession(new BrowserLauncher({ headless: true }));
+ * try {
+ *   const page = await session.getPage();
+ *   await page.goto("https://example.com");
+ * } finally {
+ *   await session.close();
+ * }
+ * ```
+ *
+ * @module
+ */
 import { BrowserSession } from "web-test/runtime/browser.ts";
 import type { BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";
 import type { Page } from "puppeteer";

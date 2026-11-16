@@ -1,6 +1,8 @@
 import { copyValue, stringifyValue } from "web-test/value.ts";
 import { Graph, type MacroDefinition, type SerializedGraph } from "web-test/graph.ts";
+/** A serialized graph optionally carrying the exported root macro's identity and display name. */
 export type MacroFile = SerializedGraph & { macro?: { id: string; name: string } };
+/** Export a graph with its referenced macro dependencies and optional root-macro identity. */
 export function exportMacroFile(graph: Graph, library: MacroDefinition[], macro?: { id: string; name: string }): MacroFile {
   const saved = graph.serialize();
   delete saved.macros;
@@ -24,6 +26,7 @@ export function exportMacroFile(graph: Graph, library: MacroDefinition[], macro?
     ...(macro ? { macro: { id: macro.id, name: macro.name } } : {}),
   });
 }
+/** Validate a macro file and merge its definitions into a library, remapping colliding IDs and names. */
 export function importMacroFile(value: unknown, filename: string, existing: MacroDefinition[]): { definitions: MacroDefinition[]; id: string } {
   const graph = Graph.deserialize(value);
   const metadata = (value as MacroFile).macro;
@@ -59,6 +62,7 @@ export function importMacroFile(value: unknown, filename: string, existing: Macr
   }
   return { definitions, id: remap.get(root.id)! };
 }
+/** Download a macro graph as a JSON file from a browser editor using the runtime value codec. */
 export function downloadMacroFile(file: MacroFile, name: string): void {
   const url = URL.createObjectURL(new Blob([stringifyValue(file, 2)], { type: "application/json" }));
   const link = document.createElement("a");

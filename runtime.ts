@@ -1,4 +1,30 @@
-/** Reusable browser sessions and graph execution for Deno integrations. @module */
+/**
+ * Execution runtimes and events for embedding Web Test in Deno applications.
+ *
+ * {@link BrowserSession} serializes browser actions and owns element references.
+ * {@link GraphRun} executes a {@link Graph}, including console-triggered branches.
+ * {@link ScriptRun} evaluates JavaScript in a separate permissionless Deno process
+ * and routes browser calls through the supplied session. Run events let editors
+ * report progress, logs, screenshots, errors, and overlapping async invocations.
+ *
+ * Call `cancel()` to stop a run, then close its browser session to release resources.
+ *
+ * @example
+ * ```ts
+ * import { BrowserSession, ScriptRun } from "@reububble/web-test/runtime";
+ *
+ * const session = new BrowserSession();
+ * const run = new ScriptRun("console.info('hello');", session, console.log);
+ * try {
+ *   await run.start();
+ * } finally {
+ *   await run.cancel();
+ *   await session.close();
+ * }
+ * ```
+ *
+ * @module
+ */
 export { BrowserSession, InvalidAction } from "web-test/runtime/browser.ts";
 export { BrowserLauncher } from "web-test/runtime/browser_launcher.ts";
 export type { BrowserLaunchOptions, BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";

@@ -3,6 +3,7 @@ import { defineNode } from "web-test/nodes/define_node.ts";
 
 const inputs: { readonly value: { readonly label: "Value"; readonly type: "boolean" } } = { value: { label: "Value", type: "boolean" } } as const;
 
+/** Node constructor. Provides a saved boolean literal as graph data. */
 export const BooleanLiteralNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly boolean: { readonly label: "Boolean"; readonly type: "boolean" } },

@@ -5,49 +5,82 @@ import { ControlNode, type ControlStep, ControlTransfer } from "web-test/nodes/c
 import { DeclarativeNode } from "web-test/nodes/declarative_node.ts";
 export { titles } from "web-test/nodes/index.ts";
 export type { NodeType, Port, PortType, Value } from "web-test/nodes/base.ts";
+/** The common runtime node contract stored by a graph. */
 export type GraphNode = BaseNode;
+/** List a node's named input ports, projecting descriptors into editor-facing type and optionality metadata. */
 export const inputs = (node: BaseNode): Port[] => listPorts(node.inputs);
+/** List a node's named output ports, projecting descriptors into editor-facing type and optionality metadata. */
 export const outputs = (node: BaseNode): Port[] => listPorts(node.outputs);
+/** Return whether the node evaluates through data dependencies without requiring a flow connection. */
 export const isDataNode = (node: BaseNode) => node.dataOnly;
+/** A typed graph edge between named ports, with optional editor routing handles. */
 export interface Connection {
+  /** The stable identifier used by saved graph records and connections. */
   id: string;
+  /** The source node identifier for this connection. */
   from: string;
+  /** The source node's named output port. */
   output: string;
+  /** The destination node identifier for this connection. */
   to: string;
+  /** The destination port or control-input name. */
   input: string;
+  /** The saved node identifier or resolved runtime port type tag. */
   type: PortType;
+  /** Optional editor coordinates used to route the connection visually. */
   handles?: { x: number; y: number }[];
 }
+/** A previously observed output value with its graph run number and observation timestamp. */
 export interface KnownValue {
+  /** The runtime output value captured for inspection. */
   value: Value;
+  /** The graph execution number in which this value was observed. */
   run: number;
+  /** The instant when this output value was observed. */
   updatedAt: Temporal.Instant;
 }
+/** Version-one graph data containing saved node properties, connections, and optional macro definitions. */
 export interface SerializedGraph {
+  /** The saved graph format version; currently always one. */
   version: 1;
+  /** Reusable graph definitions available to macro-call nodes. */
   macros?: MacroDefinition[];
+  /** The graph's node instances with their saved positions and properties. */
   nodes: { id: string; type: NodeType; xPos: number; yPos: number; properties: Record<string, Value> }[];
+  /** Connections between the graph's named node ports. */
   links: Connection[];
 }
+/** A reusable named graph identified by a stable macro ID. */
 export interface MacroDefinition {
+  /** The stable identifier used by saved graph records and connections. */
   id: string;
+  /** The unique port identifier or user-facing saved name. */
   name: string;
+  /** The serialized graph body of the reusable macro. */
   graph: SerializedGraph;
 }
+/** Node-start, node-end, and traversed-connection events emitted during graph execution. */
 export type GraphEvent = { type: "node-start"; nodeId: string } | {
   type: "node-end";
   nodeId: string;
   values: Record<string, Value>;
   known: Record<string, KnownValue>;
 } | { type: "connection"; linkId: string };
+/** Stores typed nodes, connections, macros, and inspection values, and executes structured graph control flow. */
 export class Graph {
+  /** Reusable graph definitions available to macro-call nodes. */
   macros: MacroDefinition[] = [];
+  /** The graph's node instances with their saved positions and properties. */
   nodes: BaseNode[] = [];
+  /** Connections between the graph's named node ports. */
   links: Connection[] = [];
+  /** Output records available during the current execution, keyed by node identifier. */
   results: Map<string, Record<string, Value>> = new Map();
+  /** Previously observed node outputs and their timestamps, retained for inspection. */
   lastKnown: Map<string, Record<string, KnownValue>> = new Map();
   private runNumber = 0;
   private emit?: (event: GraphEvent) => void;
+  /** Copy the graph into version-one saved data without transient execution state. */
   serialize(): SerializedGraph {
     return copyValue({
       version: 1,
@@ -56,6 +89,7 @@ export class Graph {
       ...(this.macros.length ? { macros: this.macros } : {}),
     });
   }
+  /** Copy selected nodes and their internal connections into a graph positioned relative to its top-left corner. */
   copySelection(nodeIds: Set<string>): Graph {
     const saved = this.serialize();
     const nodes = saved.nodes.filter((node) => nodeIds.has(node.id));
@@ -75,6 +109,7 @@ export class Graph {
     }
     return Graph.deserialize({ version: 1, nodes, links });
   }
+  /** Validate saved graph data and rebuild its nodes, dynamic ports, connections, and macros. */
   static deserialize(value: unknown): Graph {
     const fail = (): never => {
       throw new Error("Invalid graph file.");
@@ -155,16 +190,19 @@ export class Graph {
     if (graph.links.length !== data.links.length) return fail();
     return graph;
   }
+  /** Construct and append a built-in node, preserving its concrete type when the node type is known. */
   add<Type extends NodeType>(type: Type, x: number, y: number): NodeInstance<Type> {
     const node = createNode(type, x, y);
     this.nodes.push(node);
     return node;
   }
+  /** Find a node by ID or throw if it no longer exists. */
   node(id: string): BaseNode {
     const node = this.nodes.find((n) => n.id === id);
     if (!node) throw new Error("Block no longer exists.");
     return node;
   }
+  /** Connect compatible named ports, replacing a data input's source or a flow output's destination when occupied. */
   connect(from: string, output: string, to: string, input: string): void {
     const source = outputs(this.node(from)).find((p) => p.key === output);
     const target = inputs(this.node(to)).find((p) => p.key === input);
@@ -181,6 +219,7 @@ export class Graph {
     this.links = proposed;
     this.syncInputs();
   }
+  /** Reject cycles in data dependencies while permitting supported flow-control cycles. */
   validateCycles(links = this.links): void {
     const check = (nodes: BaseNode[], edges: Connection[], message: string) => {
       const included = new Set(nodes.map((node) => node.id));
@@ -198,6 +237,7 @@ export class Graph {
     // Flow cycles are interruptible; only cycles of data-only computations are invalid.
     check(this.nodes.filter((node) => node.dataOnly), links.filter((link) => link.type !== "flow"), "Circular data dependency.");
   }
+  /** Delete selected nodes and edges, including all connections incident to removed nodes. */
   remove(nodeIds: Set<string>, linkIds: Set<string> = new Set()): void {
     this.nodes = this.nodes.filter((n) => !nodeIds.has(n.id));
     this.links = this.links.filter((l) => !linkIds.has(l.id) && !nodeIds.has(l.from) && !nodeIds.has(l.to));
@@ -207,10 +247,12 @@ export class Graph {
     }
     this.syncInputs();
   }
+  /** Remove connections incident to the selected node identifiers. */
   disconnect(nodeIds: Set<string>): void {
     this.links = this.links.filter((l) => !nodeIds.has(l.from) && !nodeIds.has(l.to));
     this.syncInputs();
   }
+  /** Rebuild dynamic port schemas and defaults from the graph's current properties and connections. */
   syncInputs(): void {
     for (const node of this.nodes) {
       node.syncInputs(
@@ -224,6 +266,7 @@ export class Graph {
     }
     this.prune();
   }
+  /** Resolve an input from its connected output or saved default, detecting circular data dependencies. */
   value(node: BaseNode, input: string, seen: Set<string> = new Set(), allowLast = false): Value {
     const link = this.links.find((l) => l.to === node.id && l.input === input && l.type !== "flow");
     if (!link) return node.properties[input];
@@ -250,6 +293,7 @@ export class Graph {
     }
     return result;
   }
+  /** Read a node's current or last-known output value without performing a browser action. */
   inspect(node: BaseNode, output: string): KnownValue | undefined {
     if (node.dataOnly) {
       try {
@@ -265,11 +309,13 @@ export class Graph {
     }
     return this.lastKnown.get(node.id)?.[output];
   }
+  /** Record the latest values with this run's number and observation time for editor inspection. */
   private remember(node: BaseNode, values: Record<string, Value>): void {
     const known = { ...this.lastKnown.get(node.id) };
     for (const [key, value] of Object.entries(values)) known[key] = { value: copyValue(value), run: this.runNumber, updatedAt: Temporal.Now.instant() };
     this.lastKnown.set(node.id, known);
   }
+  /** Remove connections whose ports no longer exist or whose types are no longer compatible. */
   prune(): void {
     this.links = this.links.filter((link) => {
       const sourceNode = this.nodes.find((n) => n.id === link.from), targetNode = this.nodes.find((n) => n.id === link.to);
@@ -278,6 +324,7 @@ export class Graph {
       return source?.type === link.type && !!target && acceptsPortType(source.type, target.type);
     });
   }
+  /** Execute the graph's flow with supplied action callbacks, progress reporting, cancellation, macros, and runtime services. */
   async run(
     execute: (node: BaseNode, properties: Record<string, Value>) => Promise<Record<string, Value>>,
     onStep: (node: BaseNode) => void = () => {},

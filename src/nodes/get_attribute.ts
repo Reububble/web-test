@@ -13,6 +13,7 @@ const inputs: {
   attribute: { label: "Attribute", type: nonemptyText },
 } as const;
 
+/** Node constructor. Reads a named attribute from a retained browser element. */
 export const GetAttributeNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

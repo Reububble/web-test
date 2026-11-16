@@ -5,6 +5,7 @@ import type { ControlProcess, ControlValues, StepValues } from "web-test/nodes/c
 import { arrayItemType } from "web-test/nodes/data_support.ts";
 import { copyValue } from "web-test/value.ts";
 
+/** Node constructor. Executes a reducer branch per item, feeding each Result into the next iteration's accumulator. */
 export const ArrayReduceNode: ConfigurableControlNodeConstructor<
   {
     readonly array: { readonly label: "Array"; readonly type: ArrayDescriptor<Value> };

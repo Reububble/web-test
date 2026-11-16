@@ -5,6 +5,7 @@ import { textInput } from "web-test/nodes/data_support.ts";
 
 const inputs: { readonly text: { readonly label: "Text"; readonly type: TypeDescriptor<string> } } = { text: { label: "Text", type: textInput } } as const;
 
+/** Node constructor. Returns a string's UTF-16 code-unit length. */
 export const StringLengthNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly length: { readonly label: "Length"; readonly type: "number" } },

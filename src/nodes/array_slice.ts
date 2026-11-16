@@ -14,6 +14,7 @@ const inputs: {
   end: { label: "End (exclusive)", type: new OptionalDescriptor("number"), optional: true },
 } as const;
 
+/** Node constructor. Copies an array range with negative-index support and an optional exclusive end index. */
 export const ArraySliceNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly array: { readonly label: "Array"; readonly type: "array" } },

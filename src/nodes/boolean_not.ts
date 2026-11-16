@@ -3,6 +3,7 @@ import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 import { booleanInput } from "web-test/nodes/data_support.ts";
 
+/** Node constructor. Negates a validated boolean input. */
 export const BooleanNotNode: DeclarativeNodeConstructor<
   { readonly valueA: { readonly label: "Value"; readonly type: TypeDescriptor<boolean> } },
   { readonly result: { readonly label: "Result"; readonly type: "boolean" } },

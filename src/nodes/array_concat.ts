@@ -12,6 +12,7 @@ const inputs: {
   second: { label: "Second array", type: arrayInput },
 } as const;
 
+/** Node constructor. Joins two arrays without changing either input or flattening nested arrays. */
 export const ArrayConcatNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly array: { readonly label: "Array"; readonly type: "array" } },

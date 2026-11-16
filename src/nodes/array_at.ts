@@ -2,6 +2,7 @@ import { type ConfigurableFunctionNodeConstructor, defineNode } from "web-test/n
 import type { Value } from "web-test/nodes/base.ts";
 import { ArrayDescriptor, TypeConfig, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 
+/** Node constructor. Reads an array item by index and reports whether it exists, using the selected item type's default when absent. */
 export const ArrayAtNode: ConfigurableFunctionNodeConstructor<
   { array: Value[]; index: number },
   { value: Value; found: boolean },

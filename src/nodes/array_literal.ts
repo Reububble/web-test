@@ -8,6 +8,7 @@ const inputs: { readonly value: { readonly label: "Value"; readonly type: TypeDe
   value: { label: "Value", type: arrayInput },
 } as const;
 
+/** Node constructor. Provides a saved array value or forwards a connected array input. */
 export const ArrayLiteralNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly array: { readonly label: "Array"; readonly type: "array" } },

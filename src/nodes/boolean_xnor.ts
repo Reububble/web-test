@@ -3,6 +3,7 @@ import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 import { booleanInput } from "web-test/nodes/data_support.ts";
 
+/** Node constructor. Reports whether two validated boolean inputs are equal. */
 export const BooleanXnorNode: DeclarativeNodeConstructor<
   {
     readonly valueA: { readonly label: "Value A"; readonly type: TypeDescriptor<boolean> };

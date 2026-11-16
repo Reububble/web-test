@@ -3,6 +3,7 @@ import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 import type { Value } from "web-test/nodes/base.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 import { emptyTextInput } from "web-test/nodes/data_support.ts";
+/** Node constructor. Converts connected values to text and concatenates its dynamically named inputs. */
 export const StringConcatNode: DeclarativeNodeConstructor<
   { [k: string]: { label: string; type: TypeDescriptor<string> } },
   { readonly text: { readonly label: "Text"; readonly type: "text" } },

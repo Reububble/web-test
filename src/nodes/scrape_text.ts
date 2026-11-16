@@ -8,6 +8,7 @@ const inputs: {
   readonly selector: { readonly label: "Selector"; readonly type: TypeDescriptor<string> };
 } = { flow: { label: "Flow", type: "flow" }, selector: { label: "Selector", type: nonemptyText } } as const;
 
+/** Node constructor. Reads text from the first element matching a page selector and reports whether it was found. */
 export const ScrapeTextNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

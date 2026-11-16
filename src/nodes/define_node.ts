@@ -16,10 +16,13 @@ type Values = Record<string, Value>;
 type Config = Record<string, Record<string, TypeConfig>>;
 type ConfigFields<Configuration extends Config> = { [Group in keyof Configuration]: Configuration[Group][keyof Configuration[Group]] }[keyof Configuration];
 type ConfigProperties<Configuration extends Config> = { [Field in ConfigFields<Configuration> as Field["options"]["key"]]: DataType };
+/** The configuration's groups and port names, with each saved selection resolved to a runtime descriptor. */
 export type ResolvedConfig<Configuration extends Config> = {
   readonly [Group in keyof Configuration]: { readonly [Key in keyof Configuration[Group]]: TypeDescriptor<Value> };
 };
+/** A pure function node whose saved properties include its inputs and persisted type selections. */
 export interface ConfigurableFunctionNode<Inputs extends Values, Outputs extends Values, Configuration extends Config> extends FunctionNode<Inputs, Outputs> {
+  /** Saved node properties, including default values for unconnected inputs. */
   properties: Inputs & ConfigProperties<Configuration>;
 }
 
@@ -35,6 +38,7 @@ type ControlBlueprint<Inputs extends ControlPorts, Outputs extends ControlPorts,
   "type" | "title" | "help" | "control" | "config"
 >;
 
+/** Constructs a control node with configured ports, type-selection properties, and additional saved defaults. */
 export interface ConfigurableControlNodeConstructor<
   Inputs extends ControlPorts,
   Outputs extends ControlPorts,
@@ -43,37 +47,50 @@ export interface ConfigurableControlNodeConstructor<
   Configuration extends Config,
   Extra extends Values,
 > {
+  /** Construct a new node at the supplied horizontal and vertical workspace coordinates. */
   new (x: number, y: number): ControlNodeInstance<Inputs, Outputs, Controls, Entry> & {
     properties: ControlValues<Inputs> & ConfigProperties<Configuration> & Omit<Extra, keyof ControlValues<Inputs>>;
   };
+  /** The node's display title used by editors and validation errors. */
   readonly title: string;
 }
 
+/** Constructs a pure function node with named inputs, outputs, and persisted type configuration. */
 export interface ConfigurableFunctionNodeConstructor<Inputs extends Values, Outputs extends Values, Configuration extends Config> {
+  /** Construct a new node at the supplied horizontal and vertical workspace coordinates. */
   new (x: number, y: number): ConfigurableFunctionNode<Inputs, Outputs, Configuration>;
+  /** The node's display title used by editors and validation errors. */
   readonly title: string;
 }
 
+/** Builds a typed control-node constructor from descriptors resolved from persisted configuration. */
 export interface ConfiguredControlBuilder<Configuration extends Config, Controls extends readonly string[], Extra extends Values> {
+  /** Build a control-node constructor from schemas and handlers that use the selected type descriptors. */
   <const Inputs extends ControlPorts, const Outputs extends ControlPorts, Entry extends string>(
     build: (config: ResolvedConfig<Configuration>) => ControlBlueprint<Inputs, Outputs, Controls, Entry>,
   ): ConfigurableControlNodeConstructor<Inputs, Outputs, Controls, Entry, Configuration, Extra>;
 }
 
+/** Builds a typed pure-function constructor from descriptors resolved from persisted configuration. */
 export interface ConfiguredFunctionBuilder<Configuration extends Config> {
+  /** Build a pure-function constructor from schemas and a process that use the selected type descriptors. */
   <Inputs extends Values, Outputs extends Values>(
     build: (config: ResolvedConfig<Configuration>) => FunctionDefinition<Inputs, Outputs>,
   ): ConfigurableFunctionNodeConstructor<Inputs, Outputs, Configuration>;
 }
 
+/** Define a typed node constructor, or configure a builder whose port types depend on saved selections. */
 export function defineNode<Configuration extends Config, const Controls extends readonly string[], Extra extends Values = Record<never, never>>(
   metadata: ConfigControlMetadata<Configuration, Controls, Extra>,
 ): ConfiguredControlBuilder<Configuration, Controls, Extra>;
 
+/** Define a typed node constructor, or configure a builder whose port types depend on saved selections. */
 export function defineNode<Configuration extends Config>(metadata: ConfigMetadata<Configuration>): ConfiguredFunctionBuilder<Configuration>;
+/** Define a typed node constructor, or configure a builder whose port types depend on saved selections. */
 export function defineNode<const Inputs extends PortRecord, const Outputs extends PortRecord, Properties extends Values, State extends object = object>(
   metadata: NodeDefinition<Inputs, Outputs, Properties, State>,
 ): DeclarativeNodeConstructor<Inputs, Outputs, Properties>;
+/** Define a typed node constructor, or configure a builder whose port types depend on saved selections. */
 export function defineNode<
   const Inputs extends ControlPorts,
   const Outputs extends ControlPorts,

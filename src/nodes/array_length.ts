@@ -8,6 +8,7 @@ const inputs: { readonly array: { readonly label: "Array"; readonly type: TypeDe
   array: { label: "Array", type: arrayInput },
 } as const;
 
+/** Node constructor. Returns the number of items in an array. */
 export const ArrayLengthNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly length: { readonly label: "Length"; readonly type: "number" } },

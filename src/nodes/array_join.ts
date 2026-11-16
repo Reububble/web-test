@@ -9,6 +9,7 @@ const inputs: {
   readonly separator: { readonly label: "Separator"; readonly type: "text" };
 } = { array: { label: "Array", type: arrayInput }, separator: { label: "Separator", type: "text" } } as const;
 
+/** Node constructor. Converts array items to text and joins them with a separator. */
 export const ArrayJoinNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly text: { readonly label: "Text"; readonly type: "text" } },

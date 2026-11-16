@@ -5,18 +5,27 @@ import { copyValue } from "web-test/value.ts";
 import { type BrowserProcessContext, InvalidAction } from "web-test/nodes/browser_context.ts";
 
 type Values = Record<string, Value>;
+/** Map a named port schema to its runtime data values, excluding flow ports. */
 export type DataValues<Ports extends PortRecord> = {
   -readonly [Key in keyof Ports as Ports[Key]["type"] extends "flow" ? never : Key]: ValueOf<Exclude<Ports[Key]["type"], "flow">>;
 };
+/** The saved properties and instance-local state supplied to a declarative node's schema and process callbacks. */
 export interface NodeContext<Properties extends Values, State extends object> {
+  /** Saved node properties, including default values for unconnected inputs. */
   properties: Properties;
+  /** Mutable instance-local state that is not included in saved graph data. */
   state: State;
 }
+/** Runtime services for delegated actions, macro calls, and console-listener removal. */
 export interface ExecutionServices {
+  /** Execute a delegated node action with its validated named properties. */
   execute(node: BaseNode, properties: Values): Promise<Values>;
+  /** Run a macro graph through the current execution context. */
   call(macroId: string): Promise<void>;
+  /** Detach the identified subscription and report whether it existed. */
   removeListener(listener: { listenerId: string }): boolean;
 }
+/** The browser session operations available when preparing and subscribing an event node. */
 export type EventSource = Pick<BrowserSession, "onConsole" | "getPage">;
 type Schema<Ports, Properties extends Values, State extends object> = Ports | ((context: NodeContext<Properties, State>) => Ports);
 type DataProcess<Inputs extends PortRecord, Outputs extends PortRecord, Properties extends Values, State extends object> =
@@ -44,6 +53,7 @@ type Metadata<Inputs extends PortRecord, Outputs extends PortRecord, Properties 
   removeInput?: (context: NodeContext<NoInfer<Properties>, NoInfer<State>>, key: string) => void;
   setMacros?: (context: NodeContext<NoInfer<Properties>, NoInfer<State>>, macros: { id: string; name: string }[]) => void;
 };
+/** Port schemas, saved defaults, and behavior for a data, browser, action, event, local, or annotation node. */
 export type NodeDefinition<Inputs extends PortRecord, Outputs extends PortRecord, Properties extends Values, State extends object> =
   & Metadata<Inputs, Outputs, Properties, State>
   & (
@@ -74,25 +84,41 @@ export type NodeDefinition<Inputs extends PortRecord, Outputs extends PortRecord
 
 /** Shared runtime contract for declarative data, action, event and editor nodes. */
 export abstract class DeclarativeNode extends BaseNode {
+  /** The declarative execution category; omitted for structured control definitions. */
   abstract readonly kind: "data" | "browser" | "local" | "action" | "event" | "annotation";
+  /** Execute this node using its resolved inputs and runtime services. */
   abstract run(resolve: ResolveInput, services: ExecutionServices): Promise<Values>;
+  /** Whether completing this browser action should capture a PNG screenshot. */
   abstract readonly captureScreenshot: boolean;
+  /** Whether cancellation closes the browser to interrupt the current action. */
   abstract readonly interruptBrowser: boolean;
+  /** Execute a browser node with the supplied session resources and cancellation signal. */
   abstract runBrowser(context: BrowserProcessContext): Promise<Values>;
+  /** Attach an event callback and return the function that releases its subscription. */
   abstract subscribe(source: EventSource, emit: (values: Values) => void): () => void;
+  /** Prepare an event source before the subscription starts processing queued branches. */
   abstract prepare(source: EventSource): Promise<unknown>;
+  /** Refresh the macro definitions available to a node's saved selection. */
   abstract setMacros(macros: { id: string; name: string }[]): void;
 }
+/** A declarative node with concrete named input/output schemas and typed saved properties. */
 export interface DeclarativeNodeInstance<Inputs extends PortRecord, Outputs extends PortRecord, Properties extends Values> extends DeclarativeNode {
+  /** Saved node properties, including default values for unconnected inputs. */
   properties: Properties;
+  /** Named input-port schemas used to validate and resolve incoming values. */
   readonly inputs: Inputs;
+  /** Named output-port schemas used to validate published values. */
   readonly outputs: Outputs;
 }
+/** Constructs a declarative node with concrete port schemas and saved property types. */
 export interface DeclarativeNodeConstructor<Inputs extends PortRecord, Outputs extends PortRecord, Properties extends Values> {
+  /** Construct a new node at the supplied horizontal and vertical workspace coordinates. */
   new (x: number, y: number): DeclarativeNodeInstance<Inputs, Outputs, Properties>;
+  /** The node's display title used by editors and validation errors. */
   readonly title: string;
 }
 
+/** Create an independent declarative-node class from typed schemas, defaults, and runtime callbacks. */
 export function defineDeclarativeNode<
   const Inputs extends PortRecord,
   const Outputs extends PortRecord,

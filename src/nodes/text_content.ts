@@ -4,6 +4,7 @@ import { defineNode } from "web-test/nodes/define_node.ts";
 const inputs: { readonly flow: { readonly label: "Flow"; readonly type: "flow" }; readonly element: { readonly label: "Element"; readonly type: "element" } } =
   { flow: { label: "Flow", type: "flow" }, element: { label: "Element", type: "element" } } as const;
 
+/** Node constructor. Reads text content from a retained browser element. */
 export const TextContentNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

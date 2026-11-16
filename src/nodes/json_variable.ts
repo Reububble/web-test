@@ -10,6 +10,7 @@ const inputs: {
   };
 } = { value: { label: "Value", type: jsonInput } } as const;
 
+/** Node constructor. Provides or forwards a saved serializable JSON value. */
 export const JsonVariableNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly json: { readonly label: "JSON"; readonly type: "json" } },

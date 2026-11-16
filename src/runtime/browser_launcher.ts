@@ -6,20 +6,26 @@ import { tmpdir } from "node:os";
 export type BrowserLaunchOptions = Omit<LaunchOptions, "userDataDir" | "signal" | "acceptInsecureCerts">;
 /** A browser provider supplied by the embedding application's setup. */
 export interface BrowserLifecycle {
+  /** Launch or reuse a browser, applying the supplied certificate policy to a new launch. */
   launch(acceptInsecureCerts?: boolean): Promise<Browser>;
+  /** Close or reset the active browser while keeping this provider reusable. */
   reset(): Promise<void>;
+  /** Release owned resources and wait for cleanup to finish. */
   close(): Promise<void>;
 }
 // Own the profile: Puppeteer's automatic cleanup can run before process exit.
+/** Launches a caller-configured Puppeteer browser and owns its temporary profile and process cleanup. */
 export class BrowserLauncher implements BrowserLifecycle {
   private profile: string | undefined;
   private browser: Browser | undefined;
   private controller: AbortController | undefined;
   private launching: Promise<Browser> | undefined;
+  /** Create a launcher with caller-selected Puppeteer settings and an optional launch implementation. */
   constructor(
     private options: BrowserLaunchOptions = {},
     private start: (options: LaunchOptions) => Promise<Browser> = (options) => puppeteer.launch(options),
   ) {}
+  /** Launch or reuse a browser, applying the supplied certificate policy to a new launch. */
   launch(acceptInsecureCerts = false): Promise<Browser> {
     if (this.browser?.connected) return Promise.resolve(this.browser);
     if (this.launching) return this.launching;
@@ -28,6 +34,7 @@ export class BrowserLauncher implements BrowserLifecycle {
     });
     return this.launching;
   }
+  /** Launch with an owned profile and retry a transient handshake timeout once after cleanup. */
   private async open(acceptInsecureCerts: boolean): Promise<Browser> {
     const timeout = this.options.timeout ?? 30000;
     for (let attempt = 0;; attempt++) {
@@ -69,6 +76,7 @@ export class BrowserLauncher implements BrowserLifecycle {
       }
     }
   }
+  /** Close the current browser and expire its element references while keeping the provider reusable. */
   async reset(): Promise<void> {
     await this.launching?.catch(() => {});
     const browser = this.browser;
@@ -98,6 +106,7 @@ export class BrowserLauncher implements BrowserLifecycle {
       this.controller = undefined;
     }
   }
+  /** Release owned resources and wait for cleanup to finish. */
   async close(): Promise<void> {
     try {
       await this.reset();
@@ -105,6 +114,7 @@ export class BrowserLauncher implements BrowserLifecycle {
       await this.removeProfile();
     }
   }
+  /** Remove only the verified temporary profile owned by this launcher, after browser exit. */
   private async removeProfile(): Promise<void> {
     if (!this.profile) return;
     const path = await Deno.realPath(this.profile);

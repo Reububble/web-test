@@ -27,6 +27,8 @@ jobs:
           FIREFOX_PATH: ${{ steps.firefox.outputs.firefox-path }}
       - name: Check package
         run: deno task publish:check
+      - name: Check API documentation
+        run: deno task docs:check
 
   publish:
     if: github.event_name == 'release'

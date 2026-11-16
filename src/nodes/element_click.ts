@@ -5,6 +5,7 @@ import { InvalidAction } from "web-test/nodes/browser_context.ts";
 const inputs: { readonly flow: { readonly label: "Flow"; readonly type: "flow" }; readonly element: { readonly label: "Element"; readonly type: "element" } } =
   { flow: { label: "Flow", type: "flow" }, element: { label: "Element", type: "element" } } as const;
 
+/** Node constructor. Clicks an element retained by the current browser session. */
 export const ElementClickNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly next: { readonly label: "Next"; readonly type: "flow" }; readonly success: { readonly label: "Success"; readonly type: "boolean" } },

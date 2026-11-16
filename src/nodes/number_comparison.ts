@@ -6,6 +6,7 @@ const inputs: {
   readonly valueB: { readonly label: "Value B"; readonly type: "number" };
 } = { valueA: { label: "Value A", type: "number" }, valueB: { label: "Value B", type: "number" } } as const;
 
+/** Node constructor. Compares finite numeric inputs using the selected comparison operation. */
 export const NumberComparisonNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly result: { readonly label: "Result"; readonly type: "boolean" } },

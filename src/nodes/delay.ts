@@ -8,6 +8,7 @@ const inputs: {
   readonly milliseconds: { readonly label: "Wait ms"; readonly type: TypeDescriptor<number> };
 } = { flow: { label: "Flow", type: "flow" }, milliseconds: { label: "Wait ms", type: browserNumber(0, 60000) } } as const;
 
+/** Node constructor. Pauses graph execution for a bounded number of milliseconds without opening a browser. */
 export const DelayNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly next: { readonly label: "Next"; readonly type: "flow" } },

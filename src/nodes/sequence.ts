@@ -13,6 +13,7 @@ function steps(properties: Record<string, Value>): string[] {
   return value as string[];
 }
 
+/** Node constructor. Runs connected flow outputs in order while retaining branch results for the invocation. */
 export const SequenceNode: ControlNodeConstructor<{}, {}, string[], "flow"> = defineNode({
   type: "sequence",
   title: "Sequence",

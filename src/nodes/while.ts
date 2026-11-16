@@ -1,6 +1,7 @@
 import type { ControlNodeConstructor } from "web-test/nodes/control_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 
+/** Node constructor. Reevaluates a boolean condition before each branch iteration and supports structured break control. */
 export const WhileNode: ControlNodeConstructor<
   { readonly condition: { readonly label: "Condition"; readonly type: "boolean"; readonly default: false } },
   { readonly index: { readonly label: "Index"; readonly type: "number"; readonly default: 0 } },

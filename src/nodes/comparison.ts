@@ -8,6 +8,7 @@ const inputs: {
   readonly valueB: { readonly label: "Value B"; readonly type: TypeDescriptor<string> };
 } = { valueA: { label: "Value A", type: textInput }, valueB: { label: "Value B", type: textInput } } as const;
 
+/** Node constructor. Compares text inputs using a selected comparison operation. */
 export const ComparisonNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly result: { readonly label: "Result"; readonly type: "boolean" } },

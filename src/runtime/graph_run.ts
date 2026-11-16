@@ -4,6 +4,7 @@ export type { RunEvent } from "web-test/run_events.ts";
 import type { BrowserSession } from "web-test/runtime/browser.ts";
 import { DeclarativeNode } from "web-test/nodes/declarative_node.ts";
 // Each graph run owns its flow-attached listeners and serial event queue.
+/** Executes a graph's main flow and queued event branches, reporting progress and owning its subscriptions. */
 export class GraphRun {
   private stopped = false;
   private listeners = new Map<string, { nodeId: string; unsubscribe: () => void }>();
@@ -12,15 +13,18 @@ export class GraphRun {
   private subscriptionsClosed = false;
   private controller = new AbortController();
   private execution?: Promise<void>;
+  /** Bind a graph, browser session, event callback, and optional policy for finishing listener-driven runs. */
   constructor(
     private graph: Graph,
     private session: Pick<BrowserSession, "execute" | "onConsole" | "getPage">,
     private send: (event: RunEvent) => void,
     private options: { stopListeningOnCompletion?: boolean } = {},
   ) {}
+  /** Whether this run still owns subscriptions capable of scheduling event branches. */
   private get listening(): boolean {
     return this.listeners.size > 0;
   }
+  /** Detach one owned listener and report whether its reference was active. */
   private removeListener(listener: { listenerId: string }): boolean {
     const entry = this.listeners.get(listener.listenerId);
     if (!entry) return false;
@@ -28,11 +32,13 @@ export class GraphRun {
     entry.unsubscribe();
     return true;
   }
+  /** Close subscriptions and optionally discard their already captured event branches. */
   private detachAll(discardPending: boolean): void {
     for (const entry of this.listeners.values()) entry.unsubscribe();
     this.listeners.clear();
     if (discardPending) this.pending = [];
   }
+  /** Replace a node's subscription, queue its events, and publish the new listener reference. */
   private async attach(node: DeclarativeNode): Promise<Record<string, Value>> {
     if (this.subscriptionsClosed) throw new Error("Cannot attach a listener after the main flow has completed in a finite run.");
     for (const [listenerId, entry] of this.listeners) if (entry.nodeId === node.id) this.removeListener({ listenerId });
@@ -57,6 +63,7 @@ export class GraphRun {
       throw error;
     }
   }
+  /** Abort execution and detach subscriptions immediately; optionally report an error reason. */
   stop(reason?: string): void {
     if (this.stopped) return;
     this.stopped = true;
@@ -64,11 +71,13 @@ export class GraphRun {
     this.detachAll(true);
     if (reason) this.send({ type: "error", error: reason });
   }
+  /** Stop execution, release run-owned resources, and report the stopped event. */
   async cancel(): Promise<void> {
     this.stop();
     await this.execution?.catch(() => {});
     this.send({ type: "stopped" });
   }
+  /** Start execution and report progress through the event callback supplied to the constructor. */
   async start(): Promise<void> {
     try {
       this.busy = true;
@@ -86,11 +95,13 @@ export class GraphRun {
       this.fail(error);
     }
   }
+  /** Report an execution failure and abort the run with its subscriptions. */
   private fail(error: unknown): void {
     if (this.stopped) return;
     this.send({ type: "error", error: error instanceof Error ? error.message : String(error) });
     this.stop();
   }
+  /** Process captured event branches in order while preserving the single active-execution constraint. */
   private async drain(reportCompletion = true): Promise<void> {
     if (this.busy || this.stopped) return;
     this.busy = true;
@@ -106,6 +117,7 @@ export class GraphRun {
       this.busy = false;
     }
   }
+  /** Run the main graph or one captured event with browser actions and progress callbacks wired in. */
   private execute(event?: { nodeId: string; values: Record<string, Value> }): Promise<void> {
     const execution = this.graph.run(
       async (node, properties) => {

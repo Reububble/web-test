@@ -1,6 +1,7 @@
 import { type ControlNodeConstructor, ControlTransfer } from "web-test/nodes/control_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 
+/** Node constructor. Runs a Try branch, handles branch errors in Catch, and executes Finally during normal completion or unwinding. */
 export const TryCatchFinallyNode: ControlNodeConstructor<
   {},
   { readonly error: { readonly label: "Error"; readonly type: "text" }; readonly failed: { readonly label: "Failed"; readonly type: "boolean" } },

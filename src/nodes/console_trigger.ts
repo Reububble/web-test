@@ -1,5 +1,6 @@
 import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
+/** Node constructor. Subscribes a graph event branch to console messages from the automated page. */
 export const ConsoleTriggerNode: DeclarativeNodeConstructor<
   { readonly flow: { readonly label: "Flow"; readonly type: "flow" } },
   {

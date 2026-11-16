@@ -8,6 +8,7 @@ const inputs: {
   readonly text: { readonly label: "Text"; readonly type: "text" };
 } = { flow: { label: "Flow", type: "flow" }, element: { label: "Element", type: "element" }, text: { label: "Text", type: "text" } } as const;
 
+/** Node constructor. Types text into a retained element with keyboard events, preserving its existing content. */
 export const TypeTextNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly next: { readonly label: "Next"; readonly type: "flow" }; readonly success: { readonly label: "Success"; readonly type: "boolean" } },

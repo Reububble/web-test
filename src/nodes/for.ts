@@ -1,6 +1,7 @@
 import type { ControlNodeConstructor } from "web-test/nodes/control_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 
+/** Node constructor. Executes a branch for an exclusive numeric range and supports structured break control. */
 export const ForNode: ControlNodeConstructor<
   {
     readonly start: { readonly label: "Start"; readonly type: "number"; readonly default: 0 };

@@ -5,6 +5,7 @@ import type { ControlProcess, ControlValues, StepValues } from "web-test/nodes/c
 import { arrayItemType } from "web-test/nodes/data_support.ts";
 import { copyValue } from "web-test/value.ts";
 
+/** Node constructor. Runs a predicate branch for each item and stops when a true result is found. */
 export const ArraySomeNode: ConfigurableControlNodeConstructor<
   {
     readonly array: { readonly label: "Array"; readonly type: ArrayDescriptor<Value> };

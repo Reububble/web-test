@@ -1,5 +1,6 @@
 import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
+/** Node constructor. Calls a named reusable graph using the current execution services. */
 export const MacroNode: DeclarativeNodeConstructor<
   { readonly flow: { readonly label: "Flow"; readonly type: "flow" } },
   { readonly next: { readonly label: "Next"; readonly type: "flow" } },

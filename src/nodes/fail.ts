@@ -1,6 +1,7 @@
 import type { ControlNodeConstructor } from "web-test/nodes/control_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 
+/** Node constructor. Raises a graph execution error containing the supplied message. */
 export const FailNode: ControlNodeConstructor<
   { readonly message: { readonly label: "Message"; readonly type: "text"; readonly default: "Pipeline failed." } },
   {},

@@ -1,4 +1,5 @@
 import type { GraphEvent } from "web-test/graph.ts";
+/** Graph-run lifecycle events combined with node progress, logs, screenshots, errors, and listener status. */
 export type RunEvent =
   | { type: "stopped" }
   | GraphEvent

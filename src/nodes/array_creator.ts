@@ -12,6 +12,7 @@ function slots(properties: Record<string, Value>): string[] {
   }
   return value as string[];
 }
+/** Node constructor. Collects connected named item inputs into an array while maintaining one spare editor input. */
 export const ArrayCreatorNode: DeclarativeNodeConstructor<
   {
     [k: string]: {

@@ -8,6 +8,7 @@ const inputs: {
   readonly url: { readonly label: "URL"; readonly type: TypeDescriptor<string> };
 } = { flow: { label: "Flow", type: "flow" }, url: { label: "URL", type: nonemptyText } } as const;
 
+/** Node constructor. Navigates the automated page and publishes its resulting URL and title. */
 export const NavigateNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

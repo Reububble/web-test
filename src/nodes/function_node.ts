@@ -20,13 +20,19 @@ type InputPorts<Inputs extends Values> = { readonly [Key in keyof Inputs]: Input
 type OutputPorts<Outputs extends Values> = { readonly [Key in keyof Outputs]: OutputPort<Outputs[Key]> };
 type DataPorts = Readonly<Record<string, { label: string; type: DataType | TypeDescriptor<Value> }>>;
 
+/** Named input/output schemas and the synchronous process that computes a pure function node's outputs. */
 export interface FunctionDefinition<Inputs extends Values, Outputs extends Values> {
+  /** Resolve and validate inputs only when their properties are read by the process. */
   lazyInputs?: boolean;
+  /** The typed handler or named handlers that compute outputs for the node. */
   process(inputs: Inputs): Outputs;
+  /** Named input-port schemas used to validate and resolve incoming values. */
   inputs: InputPorts<NoInfer<Inputs>>;
+  /** Named output-port schemas used to validate published values. */
   outputs: OutputPorts<NoInfer<Outputs>>;
 }
 
+/** Create independent default input values from a pure function definition's port descriptors. */
 export function functionDefaults<Inputs extends Values, Outputs extends Values>(definition: FunctionDefinition<Inputs, Outputs>): Inputs {
   return Object.fromEntries(
     Object.entries(definition.inputs).map(([key, port]) => [
@@ -36,6 +42,7 @@ export function functionDefaults<Inputs extends Values, Outputs extends Values>(
   ) as Inputs;
 }
 
+/** Validate input values, run a pure function, and validate its complete named output record. */
 export function processFunction<Inputs extends Values, Outputs extends Values>(
   title: string,
   definition: FunctionDefinition<Inputs, Outputs>,
@@ -65,6 +72,7 @@ export function processFunction<Inputs extends Values, Outputs extends Values>(
   return result;
 }
 
+/** Resolve a pure function's named graph inputs and evaluate its validated output record. */
 export function evaluateFunction<Inputs extends Values, Outputs extends Values>(
   title: string,
   definition: FunctionDefinition<Inputs, Outputs>,
@@ -80,15 +88,24 @@ export function evaluateFunction<Inputs extends Values, Outputs extends Values>(
   return processFunction(title, definition, inputs);
 }
 
+/** A synchronous data-only node with typed input/output records and validated output evaluation. */
 export interface FunctionNode<Inputs extends Values, Outputs extends Values> extends BaseNode {
+  /** Named input-port schemas used to validate and resolve incoming values. */
   readonly inputs: InputPorts<Inputs>;
+  /** Named output-port schemas used to validate published values. */
   readonly outputs: OutputPorts<Outputs>;
+  /** Saved node properties, including default values for unconnected inputs. */
   properties: Inputs;
+  /** The typed handler or named handlers that compute outputs for the node. */
   process(inputs: Inputs): Outputs;
+  /** Resolve and validate one requested data output from the node's current inputs. */
   dataValue<Key extends keyof Outputs & string>(output: Key, resolve: ResolveInput): Outputs[Key];
 }
+/** Constructs an independent pure function node at the supplied workspace coordinates. */
 export interface FunctionNodeConstructor<Inputs extends Values, Outputs extends Values> {
+  /** Construct a new node at the supplied horizontal and vertical workspace coordinates. */
   new (x: number, y: number): FunctionNode<Inputs, Outputs>;
+  /** The node's display title used by editors and validation errors. */
   readonly title: string;
 }
 

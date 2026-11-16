@@ -19,6 +19,7 @@
   },
   "tasks": {
     "test": "deno test -A --parallel tests/",
+    "docs:check": "deno run --allow-read --allow-run scripts/check_docs.ts",
     "publish:check": "deno publish --dry-run",
     "publish:release": "deno publish"
   },

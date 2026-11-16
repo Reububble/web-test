@@ -21,6 +21,7 @@ const inputs: {
   acceptInsecureCerts: { label: "Trust insecure certificates", type: certificateInput, optional: true },
 } as const;
 
+/** Node constructor. Closes the current browser, expires retained elements, and optionally changes certificate handling. */
 export const ResetBrowserNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly next: { readonly label: "Next"; readonly type: "flow" } },

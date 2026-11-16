@@ -4,6 +4,7 @@ import { isJson, matchesType, readScriptPorts } from "web-test/script_schema.ts"
 import { isValue, parseValue, stringifyValue } from "web-test/value.ts";
 import { type BrowserContext, InvalidAction } from "web-test/nodes/browser_context.ts";
 import { number, text } from "web-test/nodes/browser_support.ts";
+/** Execute a typed input/output script in the automated page, enforce its timeout, and retain returned element handles. */
 export async function runScript(context: BrowserContext, fields: Record<string, unknown>, nodeId: string): Promise<Record<string, Value>> {
   const code = text(fields, "code");
   let inputs, outputs;

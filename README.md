@@ -33,6 +33,10 @@ code.
 
 Run `deno task test` for library tests, or `deno task test:library` from the parent development workspace.
 
+Run `deno task docs:check` to verify that every package entrypoint has module documentation and that local exported declarations and their public members have
+symbol documentation. The check uses Deno's generated documentation, follows the source declarations behind re-exports, and leaves dependency documentation to
+its upstream packages. The publishing workflow runs this check before release. Documentation comments and usage examples live beside the public source APIs.
+
 The JSR package is `@reububble/web-test`, licensed under MIT. To add it to another Deno project, run `deno add jsr:@reububble/web-test` after the first release
 is published. The server in the development workspace keeps its `@local/web-test` import alias, pointing to this package through the workspace.
 

@@ -8,6 +8,7 @@ const inputs: {
   readonly text: { readonly label: "Text"; readonly type: "text" };
 } = { flow: { label: "Flow", type: "flow" }, element: { label: "Element", type: "element" }, text: { label: "Text", type: "text" } } as const;
 
+/** Node constructor. Sets a retained form element's value and dispatches input and change events. */
 export const SetValueNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly next: { readonly label: "Next"; readonly type: "flow" }; readonly success: { readonly label: "Success"; readonly type: "boolean" } },

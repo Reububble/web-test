@@ -4,6 +4,7 @@ import { array } from "web-test/nodes/array_support.ts";
 
 const inputs: { readonly json: { readonly label: "JSON"; readonly type: "json" } } = { json: { label: "JSON", type: "json" } } as const;
 
+/** Node constructor. Validates that a JSON value is an array and forwards it through an Array port. */
 export const ArrayFromJsonNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly array: { readonly label: "Array"; readonly type: "array" } },

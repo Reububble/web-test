@@ -62,6 +62,7 @@ import { WhileNode } from "web-test/nodes/while.ts";
 import { ForNode } from "web-test/nodes/for.ts";
 import { FailNode } from "web-test/nodes/fail.ts";
 import { TryCatchFinallyNode } from "web-test/nodes/try_catch_finally.ts";
+/** Constructors for every supported built-in node, indexed by saved node type. */
 export const nodeClasses = {
   comment: CommentNode,
   fail: FailNode,
@@ -127,7 +128,9 @@ export const nodeClasses = {
   while: WhileNode,
   for: ForNode,
 };
+/** Display titles for the built-in node catalog, indexed by saved node type. */
 export const titles = Object.fromEntries(Object.entries(nodeClasses).map(([key, node]) => [key, node.title])) as Record<NodeType, string>;
+/** Editor category names for each built-in node type. */
 export const nodeCategories: Record<NodeType, string> = {
   navigate: "Browser",
   click: "Browser",
@@ -193,7 +196,9 @@ export const nodeCategories: Record<NodeType, string> = {
   try_catch_finally: "Errors",
   comment: "Notes",
 };
+/** The concrete node instance for a known type, or BaseNode when the type is the full node-type union. */
 export type NodeInstance<Type extends NodeType> = NodeType extends Type ? BaseNode : InstanceType<(typeof nodeClasses)[Type]>;
+/** Construct the registered built-in node for a saved type at the supplied workspace coordinates. */
 export function createNode<Type extends NodeType>(type: Type, x: number, y: number): NodeInstance<Type> {
   return new nodeClasses[type](x, y) as NodeInstance<Type>;
 }

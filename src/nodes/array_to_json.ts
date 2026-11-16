@@ -9,6 +9,7 @@ const inputs: { readonly array: { readonly label: "Array"; readonly type: TypeDe
   array: { label: "Array", type: arrayInput },
 } as const;
 
+/** Node constructor. Validates that an array contains only JSON-compatible items and forwards it through a JSON port. */
 export const ArrayToJsonNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly json: { readonly label: "JSON"; readonly type: "json" } },

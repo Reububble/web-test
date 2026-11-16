@@ -6,6 +6,7 @@ import { textInput } from "web-test/nodes/data_support.ts";
 
 const inputs: { readonly text: { readonly label: "Text"; readonly type: TypeDescriptor<string> } } = { text: { label: "Text", type: textInput } } as const;
 
+/** Node constructor. Parses text as validated JSON graph data. */
 export const JsonParseNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly json: { readonly label: "JSON"; readonly type: "json" }; readonly success: { readonly label: "Valid JSON"; readonly type: "boolean" } },

@@ -3,6 +3,7 @@ import { defineNode } from "web-test/nodes/define_node.ts";
 
 const inputs: { readonly flow: { readonly label: "Flow"; readonly type: "flow" } } = { flow: { label: "Flow", type: "flow" } } as const;
 
+/** Node constructor. Reads the automated page's current URL and title. */
 export const PageInfoNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

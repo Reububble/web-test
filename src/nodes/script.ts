@@ -3,6 +3,7 @@ import type { Value } from "web-test/nodes/base.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 import { readScriptPorts } from "web-test/script_schema.ts";
 import { runScript } from "web-test/nodes/script_process.ts";
+/** Node constructor. Executes page JavaScript with declared named input/output ports and a bounded timeout. */
 export const ScriptNode: DeclarativeNodeConstructor<
   {
     readonly flow: { readonly label: "Flow"; readonly type: "flow" };

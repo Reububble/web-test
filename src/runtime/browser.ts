@@ -6,6 +6,7 @@ import { type BrowserContext, InvalidAction } from "web-test/nodes/browser_conte
 import type { PortValuesByType } from "web-test/nodes/type_descriptor.ts";
 import { BrowserLauncher, type BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";
 export { InvalidAction } from "web-test/nodes/browser_context.ts";
+/** Serializes browser actions and owns a lazily launched page, console subscriptions, and element references. */
 export class BrowserSession {
   private browser: Browser | undefined;
   private page: Page | undefined;
@@ -15,13 +16,16 @@ export class BrowserSession {
   private elements = new Map<string, { handle: ElementHandle<Element>; key: string }>();
   private consoleListeners = new Set<(values: Record<string, Value>) => void>();
   private consoleQueue: Promise<void> = Promise.resolve();
+  /** Create a lazy browser session with a supplied provider or Puppeteer's default launch settings. */
   constructor(private launcher: BrowserLifecycle = new BrowserLauncher()) {}
+  /** Subscribe to ordered page-console records and return a function that unsubscribes. */
   onConsole(listener: (values: Record<string, Value>) => void): () => void {
     this.consoleListeners.add(listener);
     return () => {
       this.consoleListeners.delete(listener);
     };
   }
+  /** Read console arguments immediately and deliver normalized records in page-event order. */
   private captureConsole(page: Page, message: ConsoleMessage): void {
     const listeners = [...this.consoleListeners];
     if (!listeners.length) return;
@@ -55,6 +59,7 @@ export class BrowserSession {
       for (const listener of listeners) if (this.consoleListeners.has(listener)) listener(values);
     }).catch(() => {});
   }
+  /** Open or reuse the session's automated browser page; launches lazily if necessary. */
   async getPage(): Promise<Page> {
     if (this.browser?.connected && this.page && !this.page.isClosed()) return this.page;
     if (this.ready) return this.ready;
@@ -71,9 +76,11 @@ export class BrowserSession {
     });
     return await this.ready;
   }
+  /** Return a copy of the session's current certificate-handling configuration. */
   settings(): { acceptInsecureCerts: boolean } {
     return { ...this.configuration };
   }
+  /** Queue a certificate-policy change, closing the browser only when the setting changes. */
   configureCertificate(acceptInsecureCerts: boolean): Promise<void> {
     const configure = async () => {
       if (this.configuration.acceptInsecureCerts === acceptInsecureCerts) return;
@@ -86,15 +93,18 @@ export class BrowserSession {
     this.queue = result.catch(() => {});
     return result;
   }
+  /** Expire every retained element reference and release its browser handle. */
   async clearElements(): Promise<void> {
     const handles = [...this.elements.values()];
     this.elements.clear();
     await Promise.all(handles.map((item) => item.handle.dispose().catch(() => {})));
   }
+  /** Retain an element under an output key and return its transferable reference, or null. */
   async saveElement(handle: ElementHandle<Element> | null, key: string): Promise<PortValuesByType["element"]> {
     const references = await this.saveElements(handle ? [handle] : [], key);
     return references[0] ?? null;
   }
+  /** Replace the handles retained for an output key and return ordered transferable element references. */
   async saveElements(handles: ElementHandle<Element>[], key: string): Promise<PortValuesByType["element"][]> {
     for (const [id, item] of this.elements) {
       if (item.key === key) {
@@ -112,6 +122,7 @@ export class BrowserSession {
       return { elementId };
     });
   }
+  /** Resolve a nullable element reference, throwing when its shape is invalid or it has expired. */
   element(value: unknown): ElementHandle<Element> | null {
     if (value === null) return null;
     if (!value || typeof value !== "object" || !("elementId" in value) || typeof value.elementId !== "string") {
@@ -121,6 +132,7 @@ export class BrowserSession {
     if (!entry) throw new InvalidAction("This element reference expired. Run its query again after navigation.");
     return entry.handle;
   }
+  /** Execute a delegated node action with its validated named properties. */
   execute(type: unknown, properties: unknown, nodeId = "standalone", signal?: AbortSignal): Promise<{ output: Record<string, Value>; screenshot: Uint8Array }> {
     const execute = async () => {
       signal?.throwIfAborted();
@@ -176,6 +188,7 @@ export class BrowserSession {
     this.queue = result.catch(() => {});
     return result;
   }
+  /** Close the current browser and expire its element references while keeping the provider reusable. */
   async reset(acceptInsecureCerts?: boolean): Promise<void> {
     await this.clearElements();
     await this.launcher.reset();
@@ -183,6 +196,7 @@ export class BrowserSession {
     this.page = undefined;
     if (acceptInsecureCerts !== undefined) this.configuration = { ...this.configuration, acceptInsecureCerts };
   }
+  /** Release owned resources and wait for cleanup to finish. */
   async close(): Promise<void> {
     await this.queue;
     await this.ready?.catch(() => {});

@@ -13,6 +13,7 @@ const inputs: {
   timeout: { label: "Timeout ms", type: browserNumber(1, 60000) },
 } as const;
 
+/** Node constructor. Waits for a selector to match an element within the configured timeout. */
 export const WaitSelectorNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

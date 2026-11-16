@@ -1,4 +1,31 @@
-/** Browser sessions and exported pipeline execution for Deno. @module */
+/**
+ * Browser automation, graph execution, and typed node authoring for Deno.
+ *
+ * Create a lazy browser session with {@link createBrowserSession}, execute a saved
+ * graph with {@link runPipelineFile}, or define reusable nodes with
+ * {@link defineNode} and {@link defineFunctionNode}. Always close sessions after use.
+ * Browser selection and executable paths belong to the embedding application's setup.
+ *
+ * The `/browser` entrypoint contains the browser lifecycle API; `/pipeline` runs
+ * saved graphs; `/runtime` exposes graph and JavaScript run events; `/script`
+ * provides the browser-action contract for editor integrations.
+ *
+ * @example
+ * ```ts
+ * import { createBrowserSession } from "@reububble/web-test";
+ *
+ * const session = createBrowserSession();
+ * try {
+ *   const page = await session.getPage();
+ *   await page.goto("https://example.com");
+ *   console.log(await page.title());
+ * } finally {
+ *   await session.close();
+ * }
+ * ```
+ *
+ * @module
+ */
 export { createBrowserSession } from "web-test/browser.ts";
 export type { ActionResult, AutomationSession, JsonValue, Page, Value } from "web-test/browser.ts";
 export { runPipelineFile } from "web-test/pipeline.ts";

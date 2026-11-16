@@ -3,6 +3,7 @@ import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 import { booleanInput } from "web-test/nodes/data_support.ts";
 
+/** Node constructor. Computes the logical OR of two validated boolean inputs. */
 export const BooleanOrNode: DeclarativeNodeConstructor<
   {
     readonly valueA: { readonly label: "Value A"; readonly type: TypeDescriptor<boolean> };

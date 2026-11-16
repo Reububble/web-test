@@ -9,6 +9,7 @@ const inputs: {
   readonly y: { readonly label: "Y"; readonly type: TypeDescriptor<string> };
 } = { flow: { label: "Flow", type: "flow" }, x: { label: "X", type: coordinateInput }, y: { label: "Y", type: coordinateInput } } as const;
 
+/** Node constructor. Clicks the automated page at the supplied mouse coordinates. */
 export const ClickNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly next: { readonly label: "Next"; readonly type: "flow" } },

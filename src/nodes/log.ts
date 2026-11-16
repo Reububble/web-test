@@ -6,6 +6,7 @@ const inputs: { readonly flow: { readonly label: "Flow"; readonly type: "flow" }
   message: { label: "Message", type: "text" },
 } as const;
 
+/** Node constructor. Emits a message at the selected log level and publishes its timestamp. */
 export const LogNode: DeclarativeNodeConstructor<
   typeof inputs,
   {

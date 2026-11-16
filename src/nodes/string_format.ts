@@ -5,6 +5,7 @@ import { emptyTextInput } from "web-test/nodes/data_support.ts";
 import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 const tokens = /{{|}}|{([A-Za-z_][A-Za-z0-9_]*)}/g;
 const names = (template: string): string[] => [...new Set([...template.matchAll(tokens)].flatMap((match) => match[1] ? [match[1]] : []))];
+/** Node constructor. Substitutes named placeholders in a text template and supports escaped braces. */
 export const StringFormatNode: DeclarativeNodeConstructor<
   Record<string, { label: string; type: TypeDescriptor<string> }>,
   { readonly text: { readonly label: "Text"; readonly type: "text" } },

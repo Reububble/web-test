@@ -1,5 +1,6 @@
 import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
+/** Node constructor. Provides loaded file text and tracks its editor-managed file selection. */
 export const FileReadNode: DeclarativeNodeConstructor<
   {},
   {

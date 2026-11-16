@@ -3,6 +3,7 @@ import { defineNode } from "web-test/nodes/define_node.ts";
 
 const inputs: { readonly json: { readonly label: "JSON"; readonly type: "json" } } = { json: { label: "JSON", type: "json" } } as const;
 
+/** Node constructor. Converts JSON graph data to text. */
 export const JsonStringifyNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly text: { readonly label: "Text"; readonly type: "text" } },

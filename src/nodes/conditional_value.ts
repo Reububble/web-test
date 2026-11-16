@@ -1,6 +1,7 @@
 import { type ConfigurableFunctionNodeConstructor, defineNode } from "web-test/nodes/define_node.ts";
 import type { Value } from "web-test/nodes/base.ts";
 import { TypeConfig, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+/** Node constructor. Lazily reads and returns one of two values according to a boolean condition. */
 export const ConditionalValueNode: ConfigurableFunctionNodeConstructor<
   { condition: boolean; trueValue: Value; falseValue: Value },
   { value: Value },

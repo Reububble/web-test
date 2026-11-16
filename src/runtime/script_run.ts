@@ -5,6 +5,7 @@ import { parseValue, stringifyValue } from "web-test/value.ts";
 
 /** Evaluate JavaScript in a permissionless Deno subprocess and route browser operations through the session. */
 export class ScriptRun {
+  /** The stable identifier attached to all events emitted by this JavaScript run. */
   readonly runId: string;
   private process?: Deno.ChildProcess;
   private input?: WritableStreamDefaultWriter<Uint8Array>;
@@ -16,6 +17,7 @@ export class ScriptRun {
   private started = false;
   private timer?: ReturnType<typeof setTimeout>;
 
+  /** Create a JavaScript run with source text, a browser-action session, an event callback, and optional identity and deadline. */
   constructor(
     private code: string,
     private session: Pick<BrowserSession, "execute">,
@@ -25,6 +27,7 @@ export class ScriptRun {
     this.runId = options.runId ?? crypto.randomUUID();
   }
 
+  /** Start execution and report progress through the event callback supplied to the constructor. */
   start(): Promise<void> {
     if (this.started || this.finishing) return this.done.promise;
     this.started = true;
@@ -46,12 +49,14 @@ export class ScriptRun {
     return this.done.promise;
   }
 
+  /** Encode and send one message to the isolated evaluator's standard input. */
   private post(message: object): void {
     this.input?.write(new TextEncoder().encode(`${stringifyValue(message)}\n`)).catch((error) => {
       if (!this.finishing) this.finish("error", String(error));
     });
   }
 
+  /** Decode evaluator output line by line and report an unexpected process exit as a run failure. */
   private async readMessages(): Promise<void> {
     try {
       let buffer = "";
@@ -70,11 +75,13 @@ export class ScriptRun {
     }
   }
 
+  /** Stop an active run and await evaluator cleanup; already completed runs remain settled. */
   cancel(): Promise<void> {
     this.finish("stopped");
     return this.done.promise;
   }
 
+  /** Route evaluator messages to action execution, invocation tracking, logs, or run completion. */
   private receive(message: ScriptWorkerMessage): void {
     if (this.finishing) return;
     if (message.type === "async-start") {
@@ -92,6 +99,7 @@ export class ScriptRun {
     else if (message.type === "complete") this.finish("run-end");
   }
 
+  /** Execute a requested browser action and send its output or error back to the evaluator. */
   private async executeAction(callId: number, action: string, properties: Record<string, unknown>): Promise<void> {
     try {
       if (!Object.values(scriptActions).some((definition) => definition.action === action)) throw new Error("Unsupported browser action.");
@@ -104,6 +112,7 @@ export class ScriptRun {
     }
   }
 
+  /** Settle the run once, terminate the evaluator, and close every tracked async invocation. */
   private async finish(type: "run-end" | "stopped" | "error", error?: string): Promise<void> {
     if (this.finishing) return;
     this.finishing = true;

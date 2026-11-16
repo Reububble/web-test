@@ -1,6 +1,7 @@
 import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
 import { defineNode } from "web-test/nodes/define_node.ts";
 
+/** Node constructor. Detaches a console subscription so it no longer schedules event branches. */
 export const RemoveListenerNode: DeclarativeNodeConstructor<
   { readonly flow: { readonly label: "Flow"; readonly type: "flow" }; readonly listener: { readonly label: "Listener"; readonly type: "listener" } },
   { readonly next: { readonly label: "Next"; readonly type: "flow" }; readonly removed: { readonly label: "Removed"; readonly type: "boolean" } },

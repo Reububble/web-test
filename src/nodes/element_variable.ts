@@ -10,6 +10,7 @@ const inputs: {
   };
 } = { value: { label: "Value", type: elementInput } } as const;
 
+/** Node constructor. Provides or forwards a nullable browser-element reference. */
 export const ElementVariableNode: DeclarativeNodeConstructor<
   typeof inputs,
   { readonly element: { readonly label: "Element"; readonly type: "element" } },
