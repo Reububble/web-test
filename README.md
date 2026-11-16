@@ -45,13 +45,18 @@ Publishing runs JSR's standard public type checks. Built-in nodes have explicit 
 authoring new definitions. Configurable factories expose named builder and constructor interfaces. This is a Deno runtime library; it uses Deno subprocess and
 filesystem APIs.
 
-The repository's `.github/workflows/publish.yml` validates pull requests, pushes to `main`, manual runs, and published GitHub releases. It installs Firefox,
-runs the library tests, and checks the package. Only a published release publishes to JSR, after validation succeeds. Its tag must match the version in
-`deno.jsonc`, for example `v0.1.0`. Publishing uses GitHub's OIDC identity with `id-token: write`; no registry token is stored in the workflow.
+Use **Actions → Publish and bump → Run workflow**, selecting `main`. The workflow validates the current commit, publishes the version currently in `deno.jsonc`,
+tags that published commit, and then commits the next patch, minor, or major version. For example, it publishes `0.1.0` before committing `0.1.1`. A failed
+publication never advances the version. `main` therefore holds the next version awaiting release. Ordinary pushes and GitHub releases do not publish.
 
-Before the first release, create the `@reububble` scope and `web-test` package on JSR, then link the package to `Reububble/web-test` in its JSR settings. Commit
-and push these changes to the `web-test` repository, including the workflow and script runtime files. Update `version` for subsequent releases, commit it, and
-publish a matching GitHub release. A local dry run does not verify JSR account ownership or repository linking. See the
+The required **Version policy** check rejects version changes in ordinary pull requests. Enforcing that restriction on `main` requires the repository ruleset
+and dedicated release GitHub App described in [release setup](https://github.com/Reububble/web-test/blob/main/docs/releases.md). Those settings are not enabled
+merely by committing the workflow files. The publishing workflow uses JSR's OIDC integration; its separate GitHub App token commits the post-publication version
+bump through branch protection.
+
+If publication succeeds but a later GitHub operation fails, use the same workflow's **finish-bump** operation. It checks that the current version already exists
+on JSR and advances the version without republishing. This also initializes the new process when `main` still holds an already published version. See
+[release setup and recovery](https://github.com/Reububble/web-test/blob/main/docs/releases.md) and the
 [JSR publishing guide](https://jsr.io/docs/publishing-packages).
 
 `ScriptRun` and `ScriptEvent` are exported by `@reububble/web-test/runtime` for JavaScript integrations. A run evaluates top-level async JavaScript in a

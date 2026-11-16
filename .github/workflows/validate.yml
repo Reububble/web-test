@@ -1,0 +1,32 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.9.6
+      - uses: browser-actions/setup-firefox@v1
+        id: firefox
+      - name: Test library
+        run: deno task test
+        env:
+          FIREFOX_PATH: ${{ steps.firefox.outputs.firefox-path }}
+      - name: Check package
+        run: deno task publish:check
+      - name: Check API documentation
+        run: deno task docs:check

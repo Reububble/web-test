@@ -11,6 +11,7 @@
     "web-test/pipeline.ts": "./pipeline.ts",
     "web-test/": "./src/",
     "tests/": "./tests/",
+    "release/": "./scripts/",
     "@std/assert": "jsr:@std/assert@^1.0.19",
     "puppeteer": "npm:puppeteer@^24.0.0"
   },

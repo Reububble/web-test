@@ -1,21 +1,44 @@
-name: Validate and publish
+name: Publish and bump
 
 on:
-  push:
-    branches: [main]
-  pull_request:
   workflow_dispatch:
-  release:
-    types: [published]
+    inputs:
+      increment:
+        description: Version increment to commit AFTER publishing the current version
+        type: choice
+        options: [patch, minor, major]
+        default: patch
+        required: true
+      operation:
+        description: Publish normally, or finish a bump after the current version was already published
+        type: choice
+        options: [publish-and-bump, finish-bump]
+        default: publish-and-bump
+        required: true
+
+concurrency:
+  group: jsr-release
+  cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
-  validate:
+  release:
+    name: Publish and prepare next version
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
     steps:
+      - name: Require main
+        env:
+          RELEASE_REF: ${{ github.ref }}
+        run: test "$RELEASE_REF" = refs/heads/main
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - uses: denoland/setup-deno@v2
         with:
           deno-version: 2.9.6
@@ -25,28 +48,20 @@ jobs:
         run: deno task test
         env:
           FIREFOX_PATH: ${{ steps.firefox.outputs.firefox-path }}
-      - name: Check package
-        run: deno task publish:check
       - name: Check API documentation
         run: deno task docs:check
-
-  publish:
-    if: github.event_name == 'release'
-    needs: validate
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v6
-      - uses: denoland/setup-deno@v2
+      - name: Check package
+        run: deno task publish:check
+      - name: Create release App token
+        uses: actions/create-github-app-token@v3
+        id: release-token
         with:
-          deno-version: 2.9.6
-      - name: Verify release version
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+      - name: Publish current version, then commit next version
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-        run: >-
-          deno eval 'const { version } = JSON.parse(await Deno.readTextFile("deno.jsonc"));
-          if (Deno.env.get("RELEASE_TAG") !== `v${version}`) throw new Error(`Release tag must be v${version}`);'
-      - name: Publish to JSR
-        run: deno task publish:release
+          RELEASE_TOKEN: ${{ steps.release-token.outputs.token }}
+          RELEASE_OPERATION: ${{ inputs.operation }}
+          VERSION_INCREMENT: ${{ inputs.increment }}
+        run: deno run --allow-read --allow-write --allow-env --allow-net=api.github.com,jsr.io --allow-run scripts/publish_and_bump.ts "$RELEASE_OPERATION" "$VERSION_INCREMENT"

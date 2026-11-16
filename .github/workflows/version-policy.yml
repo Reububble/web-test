@@ -1,0 +1,32 @@
+name: Enforce version ownership
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  version-policy:
+    name: Inspect version from trusted base
+    runs-on: ubuntu-latest
+    steps:
+      # Use the base's validator. PR files are only read as git objects and are never executed.
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.9.6
+      - name: Report Version policy check on the pull-request head
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: deno run --allow-env --allow-net=api.github.com --allow-run=git scripts/check_version.ts
