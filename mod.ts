@@ -1,12 +1,12 @@
 /** Browser sessions and exported pipeline execution for Deno. @module */
-export { createBrowserSession } from "@reububble/web-test/browser";
-export type { ActionResult, AutomationSession, JsonValue, Page, Value } from "@reububble/web-test/browser";
-export { runPipelineFile } from "@reububble/web-test/pipeline";
-export type { PipelineOptions } from "@reububble/web-test/pipeline";
+export { createBrowserSession } from "web-test/browser.ts";
+export type { ActionResult, AutomationSession, JsonValue, Page, Value } from "web-test/browser.ts";
+export { runPipelineFile } from "web-test/pipeline.ts";
+export type { PipelineOptions } from "web-test/pipeline.ts";
 export { copyValue, parseValue, stringifyValue } from "web-test/value.ts";
 
-export { BrowserLauncher } from "@reububble/web-test/browser";
-export type { BrowserLaunchOptions, BrowserLifecycle } from "@reububble/web-test/browser";
+export { BrowserLauncher } from "web-test/browser.ts";
+export type { BrowserLaunchOptions, BrowserLifecycle } from "web-test/browser.ts";
 export type { BrowserContext, BrowserProcessContext } from "web-test/nodes/browser_context.ts";
 export { defineFunctionNode } from "web-test/nodes/function_node.ts";
 export type { FunctionNode, FunctionNodeConstructor } from "web-test/nodes/function_node.ts";

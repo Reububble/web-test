@@ -2,7 +2,7 @@ import { cp } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { assertEquals } from "@std/assert";
 
-Deno.test("package entry points and script subprocess work outside the development workspace", async () => {
+Deno.test("package entry points and script subprocess work without workspace or package self-resolution", async () => {
   const directory = await Deno.makeTempDir({ prefix: "web-test-package-" });
   try {
     const root = new URL("../", import.meta.url);
@@ -10,14 +10,17 @@ Deno.test("package entry points and script subprocess work outside the developme
     for (const file of new Set(["deno.jsonc", ...Object.values(config.exports) as string[]])) {
       await cp(fileURLToPath(new URL(file, root)), `${directory}/${file}`);
     }
+    // Registry graph validation must not depend on Deno resolving this package's own name locally.
+    delete config.name;
+    await Deno.writeTextFile(`${directory}/deno.jsonc`, JSON.stringify(config));
     await cp(fileURLToPath(new URL("src/", root)), `${directory}/src`, { recursive: true });
     await Deno.writeTextFile(
       `${directory}/consumer.ts`,
-      `import { createBrowserSession, runPipelineFile } from "@reububble/web-test";
-import { BrowserLauncher } from "@reububble/web-test/browser";
-import type { PipelineOptions } from "@reububble/web-test/pipeline";
-import { ScriptRun, type ScriptEvent } from "@reububble/web-test/runtime";
-import { scriptActions } from "@reububble/web-test/script";
+      `import { createBrowserSession, runPipelineFile } from "./mod.ts";
+import { BrowserLauncher } from "./browser.ts";
+import type { PipelineOptions } from "./pipeline.ts";
+import { ScriptRun, type ScriptEvent } from "./runtime.ts";
+import { scriptActions } from "./script.ts";
 
 const options: PipelineOptions = {};
 if (!BrowserLauncher || !runPipelineFile || !scriptActions.delay || options.timeout) throw new Error("Missing package exports.");
