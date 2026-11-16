@@ -16,7 +16,7 @@ try {
   await session.close();
 }
 
-await runPipelineFile("pipeline.json", { timeout: 30000, browser: new BrowserLauncher(launchOptions) });
+await runPipelineFile("pipeline.json", { timeout: 10000, browser: new BrowserLauncher(launchOptions) });
 ```
 
 Run with `deno run -A`. The browser is launched lazily; importing the library does not start a server or browser. The public entry points are `mod.ts`,
