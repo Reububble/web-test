@@ -2,7 +2,7 @@ import { assert, assertEquals, assertRejects } from "@std/assert";
 import { EventEmitter } from "node:events";
 import type { ChildProcess } from "node:child_process";
 import type { Browser, LaunchOptions } from "puppeteer";
-import { BrowserLauncher } from "web/runtime/browser_launcher.ts";
+import { BrowserLauncher } from "web-test/runtime/browser_launcher.ts";
 Deno.test("browser launch options come from the caller without a browser or protocol fallback", async () => {
   const browser = { connected: true, process: () => null, close: () => Promise.resolve() } as unknown as Browser;
   for (const setup of [{}, { browser: "chrome", protocol: "cdp", executablePath: "custom-browser", headless: false, timeout: 2500 }] as LaunchOptions[]) {

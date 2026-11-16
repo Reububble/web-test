@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects } from "@std/assert";
-import { Graph, type GraphNode, type Value } from "web/graph.ts";
+import { Graph, type GraphNode, type Value } from "web-test/graph.ts";
 Deno.test("While and For Break exit on a condition, take Done once, and reset on rerun", async () => {
   for (const type of ["while", "for"] as const) {
     const graph = new Graph(),

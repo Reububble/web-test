@@ -1,11 +1,11 @@
 import type { Browser, ConsoleMessage, ElementHandle, Page } from "puppeteer";
-import type { NodeType, Value } from "web/nodes/base.ts";
-import { createNode, nodeClasses } from "web/nodes/index.ts";
-import { DeclarativeNode } from "web/nodes/declarative_node.ts";
-import { type BrowserContext, InvalidAction } from "web/nodes/browser_context.ts";
-import type { PortValuesByType } from "web/nodes/type_descriptor.ts";
-import { BrowserLauncher, type BrowserLifecycle } from "web/runtime/browser_launcher.ts";
-export { InvalidAction } from "web/nodes/browser_context.ts";
+import type { NodeType, Value } from "web-test/nodes/base.ts";
+import { createNode, nodeClasses } from "web-test/nodes/index.ts";
+import { DeclarativeNode } from "web-test/nodes/declarative_node.ts";
+import { type BrowserContext, InvalidAction } from "web-test/nodes/browser_context.ts";
+import type { PortValuesByType } from "web-test/nodes/type_descriptor.ts";
+import { BrowserLauncher, type BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";
+export { InvalidAction } from "web-test/nodes/browser_context.ts";
 export class BrowserSession {
   private browser: Browser | undefined;
   private page: Page | undefined;

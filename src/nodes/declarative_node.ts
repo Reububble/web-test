@@ -1,8 +1,8 @@
-import { BaseNode, type NodeType, type PortRecord, type ResolveInput, type Value } from "web/nodes/base.ts";
-import { resolveDescriptor, type ValueOf } from "web/nodes/type_descriptor.ts";
-import type { BrowserSession } from "web/runtime/browser.ts";
-import { copyValue } from "web/value.ts";
-import { type BrowserProcessContext, InvalidAction } from "web/nodes/browser_context.ts";
+import { BaseNode, type NodeType, type PortRecord, type ResolveInput, type Value } from "web-test/nodes/base.ts";
+import { resolveDescriptor, type ValueOf } from "web-test/nodes/type_descriptor.ts";
+import type { BrowserSession } from "web-test/runtime/browser.ts";
+import { copyValue } from "web-test/value.ts";
+import { type BrowserProcessContext, InvalidAction } from "web-test/nodes/browser_context.ts";
 
 type Values = Record<string, Value>;
 export type DataValues<Ports extends PortRecord> = {

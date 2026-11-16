@@ -1,9 +1,20 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
-const inputs = { flow: { label: "Flow", type: "flow" }, message: { label: "Message", type: "text" } } as const;
+const inputs: { readonly flow: { readonly label: "Flow"; readonly type: "flow" }; readonly message: { readonly label: "Message"; readonly type: "text" } } = {
+  flow: { label: "Flow", type: "flow" },
+  message: { label: "Message", type: "text" },
+} as const;
 
-export const LogNode = defineNode({
+export const LogNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  {
+    readonly next: { readonly label: "Next"; readonly type: "flow" };
+    readonly message: { readonly label: "Message"; readonly type: "text" };
+    readonly timestamp: { readonly label: "Timestamp"; readonly type: "instant" };
+  },
+  DataValues<typeof inputs> & { level: string }
+> = defineNode({
   kind: "local",
   type: "log",
   title: "Log",

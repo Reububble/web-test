@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "@std/assert";
-import { type BrowserLifecycle, createBrowserSession, runPipelineFile } from "@local/web-test";
+import { type BrowserLifecycle, createBrowserSession, runPipelineFile } from "@reububble/web-test";
 import type { Browser, Page } from "puppeteer";
 
 function provider() {

@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
-import { Graph } from "web/graph.ts";
+import { Graph } from "web-test/graph.ts";
 Deno.test("flow cycles allow synchronous nodes, including nested cycles and saved graphs", () => {
   const graph = new Graph();
   const a = graph.add("log", 0, 0), b = graph.add("log", 0, 0);

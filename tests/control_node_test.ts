@@ -1,8 +1,8 @@
 import { assertEquals, assertRejects, assertThrows } from "@std/assert";
-import { Graph, inputs, outputs } from "web/graph.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import type { ControlProcess, ControlStep } from "web/nodes/control_node.ts";
-import { WhileNode } from "web/nodes/while.ts";
+import { Graph, inputs, outputs } from "web-test/graph.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import type { ControlProcess, ControlStep } from "web-test/nodes/control_node.ts";
+import { WhileNode } from "web-test/nodes/while.ts";
 
 function loopNode(onClose: () => void = () => {}, onStop: () => void = () => {}) {
   return defineNode({

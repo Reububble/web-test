@@ -1,5 +1,10 @@
-import { defineNode } from "web/nodes/define_node.ts";
-export const MacroNode = defineNode({
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+export const MacroNode: DeclarativeNodeConstructor<
+  { readonly flow: { readonly label: "Flow"; readonly type: "flow" } },
+  { readonly next: { readonly label: "Next"; readonly type: "flow" } },
+  { macroId: string }
+> = defineNode({
   kind: "action",
   type: "macro",
   title: "Run Macro",

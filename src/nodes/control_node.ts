@@ -1,6 +1,6 @@
-import { BaseNode, type NodeType, type ResolveInput, type Value } from "web/nodes/base.ts";
-import { resolveDescriptor, type TypeReference, type ValueOf } from "web/nodes/type_descriptor.ts";
-import { copyValue } from "web/value.ts";
+import { BaseNode, type NodeType, type ResolveInput, type Value } from "web-test/nodes/base.ts";
+import { resolveDescriptor, type TypeReference, type ValueOf } from "web-test/nodes/type_descriptor.ts";
+import { copyValue } from "web-test/value.ts";
 
 type Values = Record<string, Value>;
 export type ControlPorts = Readonly<Record<string, { label: string; type: TypeReference; default?: Value; deferred?: boolean; syncDefault?: boolean }>>;

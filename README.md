@@ -5,7 +5,7 @@ pipeline runner migrated from `Desktop/deno/auto`. It is a library: reusable bro
 startup, and HTTP handling belong to `web-test-server`.
 
 ```ts
-import { BrowserLauncher, createBrowserSession, runPipelineFile } from "@local/web-test";
+import { BrowserLauncher, createBrowserSession, runPipelineFile } from "@reububble/web-test";
 
 const launchOptions = { browser: "chrome", protocol: "cdp", headless: true } as const;
 const session = createBrowserSession(new BrowserLauncher(launchOptions));
@@ -20,10 +20,10 @@ await runPipelineFile("pipeline.json", { timeout: 30000, browser: new BrowserLau
 ```
 
 Run with `deno run -A`. The browser is launched lazily; importing the library does not start a server or browser. The public entry points are `mod.ts`,
-`browser.ts`, and `pipeline.ts` under the local package name `@local/web-test`. `@local/web-test/runtime` exposes browser sessions, browser lifecycle, graph
-execution, and events for integrations. `@local/web-test/pipeline` runs exported pipeline files without a CLI. Consumers use these public exports instead of
-importing the library's source directories. The parent development workspace resolves this package locally, including dependencies declared with a `jsr:`
-specifier.
+`browser.ts`, and `pipeline.ts` under the local package name `@reububble/web-test`. `@reububble/web-test/runtime` exposes browser sessions, browser lifecycle,
+graph execution, and events for integrations. `@reububble/web-test/pipeline` runs exported pipeline files without a CLI. Consumers use these public exports
+instead of importing the library's source directories. The parent development workspace resolves this package locally, including dependencies declared with a
+`jsr:` specifier.
 
 The embedding application chooses the browser, protocol, and executable through `BrowserLauncher` options. Without a provider, Puppeteer's default launch
 settings apply. Custom `BrowserLifecycle` providers can supply their own launch, reset, and close operations. The pipeline owns and closes its supplied
@@ -33,9 +33,33 @@ code.
 
 Run `deno task test` for library tests, or `deno task test:library` from the parent development workspace.
 
+The JSR package is `@reububble/web-test`, licensed under MIT. To add it to another Deno project, run `deno add jsr:@reububble/web-test` after the first release
+is published. The server in the development workspace keeps its `@local/web-test` import alias, pointing to this package through the workspace.
+
+Run `deno task publish:check` from this repository for a publishing dry run. For an uncommitted working tree, use `deno task publish:check --allow-dirty`.
+Publishing runs JSR's standard public type checks. Built-in nodes have explicit constructor and schema types, while the node factories infer types when
+authoring new definitions. Configurable factories expose named builder and constructor interfaces. This is a Deno runtime library; it uses Deno subprocess and
+filesystem APIs.
+
+The repository's `.github/workflows/publish.yml` validates pull requests, pushes to `main`, manual runs, and published GitHub releases. It installs Firefox,
+runs the library tests, and checks the package. Only a published release publishes to JSR, after validation succeeds. Its tag must match the version in
+`deno.jsonc`, for example `v0.1.0`. Publishing uses GitHub's OIDC identity with `id-token: write`; no registry token is stored in the workflow.
+
+Before the first release, create the `@reububble` scope and `web-test` package on JSR, then link the package to `Reububble/web-test` in its JSR settings. Commit
+and push these changes to the `web-test` repository, including the workflow and script runtime files. Update `version` for subsequent releases, commit it, and
+publish a matching GitHub release. A local dry run does not verify JSR account ownership or repository linking. See the
+[JSR publishing guide](https://jsr.io/docs/publishing-packages).
+
+`ScriptRun` and `ScriptEvent` are exported by `@reububble/web-test/runtime` for JavaScript integrations. A run evaluates top-level async JavaScript in a
+separate Deno process without permissions and routes the browser and element methods in `@reububble/web-test/script` through its supplied session. Methods
+return named output records; script arguments/results use the value codec to preserve instants and references. `browser.track(blockId, action)` emits separate
+async start/end events with invocation IDs, supporting concurrent and nested calls. Errors, cancellation, and timeouts close every active invocation.
+Cancellation terminates the evaluator and aborts pending session actions, including scripts stuck in synchronous loops. HTTP and WebSocket transport remain in
+the server project. The pure `@reububble/web-test/script` entry point exports the method contract and script-port validation for editor integrations.
+
 Runtime `Value` supports `Temporal.Instant`, including nested arrays and records. Timestamp ports use the `instant` type. `JsonValue` remains restricted to
-ordinary JSON data. Use `stringifyValue` and `parseValue` from `@local/web-test` (also exported by `@local/web-test/runtime`) at file, storage and network
-boundaries. Instants encode as `{ "$type": "instant", "epochSeconds": 1792728000,
+ordinary JSON data. Use `stringifyValue` and `parseValue` from `@reububble/web-test` (also exported by `@reububble/web-test/runtime`) at file, storage and
+network boundaries. Instants encode as `{ "$type": "instant", "epochSeconds": 1792728000,
 "nanoseconds": 123456789 }`, preserving nanosecond precision. Objects
 containing their own `$type` field are escaped by the encoder and restored by the decoder. Ordinary ISO strings remain strings. Use the codec as a pair rather
 than native JSON methods when exchanging runtime values.

@@ -1,14 +1,27 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { browserNumber, nonemptyText } from "web/nodes/browser_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { browserNumber, nonemptyText } from "web-test/nodes/browser_support.ts";
 
-const inputs = {
+const inputs: {
+  readonly flow: { readonly label: "Flow"; readonly type: "flow" };
+  readonly selector: { readonly label: "Selector"; readonly type: TypeDescriptor<string> };
+  readonly timeout: { readonly label: "Timeout ms"; readonly type: TypeDescriptor<number> };
+} = {
   flow: { label: "Flow", type: "flow" },
   selector: { label: "Selector", type: nonemptyText },
   timeout: { label: "Timeout ms", type: browserNumber(1, 60000) },
 } as const;
 
-export const WaitSelectorNode = defineNode({
+export const WaitSelectorNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  {
+    readonly next: { readonly label: "Next"; readonly type: "flow" };
+    readonly element: { readonly label: "Element"; readonly type: "element" };
+    readonly success: { readonly label: "Found"; readonly type: "boolean" };
+  },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "browser",
   type: "wait_selector",
   title: "Wait for Element",

@@ -1,5 +1,5 @@
-import { copyValue, stringifyValue } from "web/value.ts";
-import { Graph, type MacroDefinition, type SerializedGraph } from "web/graph.ts";
+import { copyValue, stringifyValue } from "web-test/value.ts";
+import { Graph, type MacroDefinition, type SerializedGraph } from "web-test/graph.ts";
 export type MacroFile = SerializedGraph & { macro?: { id: string; name: string } };
 export function exportMacroFile(graph: Graph, library: MacroDefinition[], macro?: { id: string; name: string }): MacroFile {
   const saved = graph.serialize();

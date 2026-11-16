@@ -2,10 +2,10 @@ import { testBrowserLauncher } from "tests/browser_fixture.ts";
 /// <reference lib="dom" />
 import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
 import type { ElementHandle } from "puppeteer";
-import { BrowserSession } from "web/runtime/browser.ts";
-import { GraphRun } from "web/runtime/graph_run.ts";
-import { Graph } from "web/graph.ts";
-import type { RunEvent } from "web/run_events.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
+import { GraphRun } from "web-test/runtime/graph_run.ts";
+import { Graph } from "web-test/graph.ts";
+import type { RunEvent } from "web-test/run_events.ts";
 Deno.test("element array replacement releases every old handle and respects the retention limit", async () => {
   const session = new BrowserSession(testBrowserLauncher());
   const fake = () => {

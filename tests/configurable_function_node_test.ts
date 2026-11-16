@@ -1,11 +1,11 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { Graph, type GraphEvent, inputs, outputs } from "web/graph.ts";
-import { ArrayAtNode } from "web/nodes/array_at.ts";
-import type { BaseNode, Value } from "web/nodes/base.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { defineFunctionNode } from "web/nodes/function_node.ts";
-import { ArrayDescriptor, type Optional, OptionalDescriptor, TypeConfig, typeDescriptor } from "web/nodes/type_descriptor.ts";
-import { dataTypes, defaultValue } from "web/script_schema.ts";
+import { Graph, type GraphEvent, inputs, outputs } from "web-test/graph.ts";
+import { ArrayAtNode } from "web-test/nodes/array_at.ts";
+import type { BaseNode, Value } from "web-test/nodes/base.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { defineFunctionNode } from "web-test/nodes/function_node.ts";
+import { ArrayDescriptor, type Optional, OptionalDescriptor, TypeConfig, typeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import { dataTypes, defaultValue } from "web-test/script_schema.ts";
 
 const OptionalNumber = defineFunctionNode({
   type: "number_literal",

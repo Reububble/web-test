@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects } from "@std/assert";
-import { Graph, type GraphNode, type Value } from "web/graph.ts";
+import { Graph, type GraphNode, type Value } from "web-test/graph.ts";
 function block(graph: Graph, message: string, type: "log" | "fail" = "log") {
   const node = graph.add(type, 0, 0);
   node.properties.message = message;

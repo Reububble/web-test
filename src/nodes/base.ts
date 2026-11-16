@@ -1,4 +1,4 @@
-import type { TypeDescriptor } from "web/nodes/type_descriptor.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 
 type BuiltinNodeType = "navigate" | "click" | "extract_text" | "conditional" | "comparison" | "text_literal" | "boolean_literal";
 export type ExtraNodeType =

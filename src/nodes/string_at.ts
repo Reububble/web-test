@@ -1,6 +1,6 @@
-import { defineFunctionNode } from "web/nodes/function_node.ts";
+import { defineFunctionNode, type FunctionNodeConstructor } from "web-test/nodes/function_node.ts";
 
-export const StringAtNode = defineFunctionNode({
+export const StringAtNode: FunctionNodeConstructor<{ text: string; index: number }, { text: string; found: boolean }> = defineFunctionNode({
   type: "string_at",
   title: "String At",
   help: "Returns the UTF-16 code unit at Index. Negative indices count from the end. An out-of-range index returns empty text and Found = false.",

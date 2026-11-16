@@ -1,7 +1,7 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { InvalidAction } from "web/nodes/browser_context.ts";
-import type { TypeDescriptor } from "web/nodes/type_descriptor.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { InvalidAction } from "web-test/nodes/browser_context.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 
 const certificateInput: TypeDescriptor<boolean | null> = {
   type: "boolean",
@@ -13,12 +13,19 @@ const certificateInput: TypeDescriptor<boolean | null> = {
   },
 };
 
-const inputs = {
+const inputs: {
+  readonly flow: { readonly label: "Flow"; readonly type: "flow" };
+  readonly acceptInsecureCerts: { readonly label: "Trust insecure certificates"; readonly type: TypeDescriptor<boolean | null>; readonly optional: true };
+} = {
   flow: { label: "Flow", type: "flow" },
   acceptInsecureCerts: { label: "Trust insecure certificates", type: certificateInput, optional: true },
 } as const;
 
-export const ResetBrowserNode = defineNode({
+export const ResetBrowserNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly next: { readonly label: "Next"; readonly type: "flow" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "browser",
   type: "reset_browser",
   title: "Reset Browser",

@@ -1,5 +1,15 @@
-import { defineNode } from "web/nodes/define_node.ts";
-export const FileReadNode = defineNode({
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+export const FileReadNode: DeclarativeNodeConstructor<
+  {},
+  {
+    readonly text: { readonly label: "Text"; readonly type: "text" };
+    readonly name: { readonly label: "Filename"; readonly type: "text" };
+    readonly size: { readonly label: "Bytes"; readonly type: "number" };
+    readonly loaded: { readonly label: "Loaded"; readonly type: "boolean" };
+  },
+  { contents: string; name: string; size: number; loaded: boolean }
+> = defineNode({
   kind: "data",
   type: "file_read",
   title: "File Read",

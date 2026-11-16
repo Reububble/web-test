@@ -1,6 +1,12 @@
-import { defineNode } from "web/nodes/define_node.ts";
+import type { ControlNodeConstructor } from "web-test/nodes/control_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
-export const WhileNode = defineNode({
+export const WhileNode: ControlNodeConstructor<
+  { readonly condition: { readonly label: "Condition"; readonly type: "boolean"; readonly default: false } },
+  { readonly index: { readonly label: "Index"; readonly type: "number"; readonly default: 0 } },
+  readonly ["each", "done"],
+  "flow" | "break"
+> = defineNode({
   type: "while",
   title: "While",
   help:

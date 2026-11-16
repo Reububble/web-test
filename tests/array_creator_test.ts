@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { Graph, inputs, type Value } from "web/graph.ts";
-import type { DataType } from "web/nodes/base.ts";
+import { Graph, inputs, type Value } from "web-test/graph.ts";
+import type { DataType } from "web-test/nodes/base.ts";
 Deno.test("Array Creator adds one spare slot and preserves connected keys through removals", () => {
   const graph = new Graph(), creator = graph.add("array_creator", 0, 0), text = graph.add("text_literal", 0, 0);
   const read = () => creator.dataValue("array", (key) => graph.value(creator, key));

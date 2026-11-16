@@ -1,6 +1,6 @@
 import { testBrowserLauncher } from "tests/browser_fixture.ts";
 import { assertEquals, assertRejects } from "@std/assert";
-import { BrowserSession } from "web/runtime/browser.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
 import { selfSignedCertificate } from "tests/self_signed.ts";
 Deno.test("insecure certificate launch settings control local TLS trust", async () => {
   const fixture = await selfSignedCertificate(false);

@@ -1,6 +1,6 @@
 import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
-import { Graph, type GraphNode, type Value } from "web/graph.ts";
-import { defaultValue, matchesType, readScriptPorts } from "web/script_schema.ts";
+import { Graph, type GraphNode, type Value } from "web-test/graph.ts";
+import { defaultValue, matchesType, readScriptPorts } from "web-test/script_schema.ts";
 const read = (graph: Graph, node: GraphNode, output: string) => node.dataValue(output, (key) => graph.value(node, key));
 Deno.test("array type validates JSON arrays and persists distinct connections", () => {
   assertEquals(defaultValue("array"), []);

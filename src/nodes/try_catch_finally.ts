@@ -1,7 +1,12 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import { ControlTransfer } from "web/nodes/control_node.ts";
+import { type ControlNodeConstructor, ControlTransfer } from "web-test/nodes/control_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
-export const TryCatchFinallyNode = defineNode({
+export const TryCatchFinallyNode: ControlNodeConstructor<
+  {},
+  { readonly error: { readonly label: "Error"; readonly type: "text" }; readonly failed: { readonly label: "Failed"; readonly type: "boolean" } },
+  readonly ["try", "catch", "finally", "next"],
+  "flow"
+> = defineNode({
   type: "try_catch_finally",
   title: "Try / Catch / Finally",
   help:

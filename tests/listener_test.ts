@@ -1,7 +1,7 @@
 import { assert, assertEquals } from "@std/assert";
-import { Graph, type Value } from "web/graph.ts";
-import { BrowserSession } from "web/runtime/browser.ts";
-import { GraphRun, type RunEvent } from "web/runtime/graph_run.ts";
+import { Graph, type Value } from "web-test/graph.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
+import { GraphRun, type RunEvent } from "web-test/runtime/graph_run.ts";
 
 function source() {
   const callbacks = new Set<(values: Record<string, Value>) => void>();

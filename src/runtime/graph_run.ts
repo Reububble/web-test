@@ -1,8 +1,8 @@
-import type { Graph, Value } from "web/graph.ts";
-import type { RunEvent } from "web/run_events.ts";
-export type { RunEvent } from "web/run_events.ts";
-import type { BrowserSession } from "web/runtime/browser.ts";
-import { DeclarativeNode } from "web/nodes/declarative_node.ts";
+import type { Graph, Value } from "web-test/graph.ts";
+import type { RunEvent } from "web-test/run_events.ts";
+export type { RunEvent } from "web-test/run_events.ts";
+import type { BrowserSession } from "web-test/runtime/browser.ts";
+import { DeclarativeNode } from "web-test/nodes/declarative_node.ts";
 // Each graph run owns its flow-attached listeners and serial event queue.
 export class GraphRun {
   private stopped = false;

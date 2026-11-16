@@ -1,10 +1,19 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { arrayInput } from "web/nodes/data_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { arrayInput } from "web-test/nodes/data_support.ts";
 
-const inputs = { array: { label: "Array", type: arrayInput }, separator: { label: "Separator", type: "text" } } as const;
+const inputs: {
+  readonly array: { readonly label: "Array"; readonly type: TypeDescriptor<Value[]> };
+  readonly separator: { readonly label: "Separator"; readonly type: "text" };
+} = { array: { label: "Array", type: arrayInput }, separator: { label: "Separator", type: "text" } } as const;
 
-export const ArrayJoinNode = defineNode({
+export const ArrayJoinNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly text: { readonly label: "Text"; readonly type: "text" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "data",
   type: "array_join",
   title: "Array Join",

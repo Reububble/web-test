@@ -1,5 +1,5 @@
-import { InvalidAction } from "web/nodes/browser_context.ts";
-import { type TypeDescriptor, typeDescriptor } from "web/nodes/type_descriptor.ts";
+import { InvalidAction } from "web-test/nodes/browser_context.ts";
+import { type TypeDescriptor, typeDescriptor } from "web-test/nodes/type_descriptor.ts";
 
 export function text(fields: Record<string, unknown>, key: string, empty = false): string {
   const value = fields[key];

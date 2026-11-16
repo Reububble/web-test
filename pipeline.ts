@@ -1,10 +1,10 @@
-import { parseValue } from "web/value.ts";
-import type { BrowserLifecycle } from "web/runtime/browser_launcher.ts";
+import { parseValue } from "web-test/value.ts";
+import type { BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";
 /** Run graphs exported by Web Test Studio, with failure propagation and browser cleanup. @module */
 
-import { BrowserSession } from "web/runtime/browser.ts";
-import { GraphRun } from "web/runtime/graph_run.ts";
-import { Graph } from "web/graph.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
+import { GraphRun } from "web-test/runtime/graph_run.ts";
+import { Graph } from "web-test/graph.ts";
 /** Controls for executing a graph exported by Web Test Studio. */
 
 export interface PipelineOptions {

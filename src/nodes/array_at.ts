@@ -1,8 +1,12 @@
-import type { Value } from "web/nodes/base.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { ArrayDescriptor, TypeConfig, type TypeDescriptor } from "web/nodes/type_descriptor.ts";
+import { type ConfigurableFunctionNodeConstructor, defineNode } from "web-test/nodes/define_node.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { ArrayDescriptor, TypeConfig, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 
-export const ArrayAtNode = defineNode({
+export const ArrayAtNode: ConfigurableFunctionNodeConstructor<
+  { array: Value[]; index: number },
+  { value: Value; found: boolean },
+  { inputs: { array: TypeConfig<"itemType"> } }
+> = defineNode({
   type: "array_at",
   title: "Array At",
   help: "Gets one item. Negative indices count from the end. Found is false for an out-of-range index; Value then uses the selected type's empty value.",

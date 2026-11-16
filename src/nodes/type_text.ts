@@ -1,10 +1,18 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { InvalidAction } from "web/nodes/browser_context.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { InvalidAction } from "web-test/nodes/browser_context.ts";
 
-const inputs = { flow: { label: "Flow", type: "flow" }, element: { label: "Element", type: "element" }, text: { label: "Text", type: "text" } } as const;
+const inputs: {
+  readonly flow: { readonly label: "Flow"; readonly type: "flow" };
+  readonly element: { readonly label: "Element"; readonly type: "element" };
+  readonly text: { readonly label: "Text"; readonly type: "text" };
+} = { flow: { label: "Flow", type: "flow" }, element: { label: "Element", type: "element" }, text: { label: "Text", type: "text" } } as const;
 
-export const TypeTextNode = defineNode({
+export const TypeTextNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly next: { readonly label: "Next"; readonly type: "flow" }; readonly success: { readonly label: "Success"; readonly type: "boolean" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "browser",
   type: "type_text",
   title: "Type Text",

@@ -1,9 +1,30 @@
 {
-  "name": "@local/web-test",
+  "name": "@reububble/web-test",
   "version": "0.1.0",
+  "license": "MIT",
+  "publish": {
+    "include": ["*.ts", "src/**/*.ts", "README.md", "LICENSE", "deno.jsonc"]
+  },
   "fmt": { "lineWidth": 160 },
-  "imports": { "web/": "./src/", "tests/": "./tests/", "@std/assert": "jsr:@std/assert@^1.0.19", "puppeteer": "npm:puppeteer@^24.0.0" },
-  "compilerOptions": { "lib": ["dom", "dom.iterable", "esnext", "deno.ns"] },
-  "tasks": { "test": "deno test -A --parallel tests/" },
-  "exports": { "./runtime": "./runtime.ts", "./browser": "./browser.ts", "./pipeline": "./pipeline.ts", ".": "./mod.ts" }
+  "imports": {
+    "web-test/": "./src/",
+    "tests/": "./tests/",
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "puppeteer": "npm:puppeteer@^24.0.0"
+  },
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext", "deno.ns"]
+  },
+  "tasks": {
+    "test": "deno test -A --parallel tests/",
+    "publish:check": "deno publish --dry-run",
+    "publish:release": "deno publish"
+  },
+  "exports": {
+    "./script": "./script.ts",
+    "./runtime": "./runtime.ts",
+    "./browser": "./browser.ts",
+    "./pipeline": "./pipeline.ts",
+    ".": "./mod.ts"
+  }
 }

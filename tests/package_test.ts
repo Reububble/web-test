@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects } from "@std/assert";
-import { createBrowserSession, runPipelineFile } from "@local/web-test";
+import { createBrowserSession, runPipelineFile } from "@reububble/web-test";
 Deno.test("package session can close before a browser is launched", async () => {
   const session = createBrowserSession();
   await session.close();

@@ -1,0 +1,18 @@
+/** Browser methods available to generated JavaScript. Arguments map to existing node inputs; results are named output records. */
+export const scriptActions = {
+  navigate: { action: "navigate", inputs: ["url"] },
+  click: { action: "click", inputs: ["x", "y"] },
+  scrapeText: { action: "extract_text", inputs: ["selector"] },
+  querySelector: { action: "query_selector", inputs: ["selector"] },
+  querySelectorAll: { action: "query_selector_all", inputs: ["selector"] },
+  textContent: { action: "text_content", inputs: ["element"] },
+  getAttribute: { action: "get_attribute", inputs: ["element", "attribute"] },
+  setValue: { action: "set_value", inputs: ["element", "text"] },
+  typeText: { action: "type_text", inputs: ["element", "text"] },
+  clickElement: { action: "element_click", inputs: ["element"] },
+  waitForElement: { action: "wait_selector", inputs: ["selector", "timeout"] },
+  delay: { action: "delay", inputs: ["milliseconds"] },
+  pageInfo: { action: "page_info", inputs: [] },
+  resetBrowser: { action: "reset_browser", inputs: ["acceptInsecureCerts"] },
+  evaluate: { action: "script", inputs: ["code", "arguments", "inputPorts", "outputPorts", "timeout"] },
+} as const;

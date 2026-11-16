@@ -1,8 +1,8 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import type { BaseNode } from "web/nodes/base.ts";
-import { defineFunctionNode } from "web/nodes/function_node.ts";
-import { StringAtNode } from "web/nodes/string_at.ts";
-import { Graph, type GraphEvent } from "web/graph.ts";
+import type { BaseNode } from "web-test/nodes/base.ts";
+import { defineFunctionNode } from "web-test/nodes/function_node.ts";
+import { StringAtNode } from "web-test/nodes/string_at.ts";
+import { Graph, type GraphEvent } from "web-test/graph.ts";
 
 const inputPorts = {
   text: { label: "Text", type: "text", default: "" },

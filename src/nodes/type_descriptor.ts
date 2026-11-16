@@ -1,5 +1,5 @@
-import type { DataType, JsonValue, Value } from "web/nodes/base.ts";
-import { dataTypes, matchesType } from "web/script_schema.ts";
+import type { DataType, JsonValue, Value } from "web-test/nodes/base.ts";
+import { dataTypes, matchesType } from "web-test/script_schema.ts";
 
 export type Optional<T> = T | null;
 export type PortValuesByType = {
@@ -82,7 +82,7 @@ export class ArrayDescriptor<T extends Value> implements TypeDescriptor<T[]> {
 
 /** A persisted type selection; descriptors are rebuilt rather than serialized. */
 export class TypeConfig<const Key extends string = string> {
-  readonly choices = dataTypes.map((type): [string, string] => [type, type === "json" ? "JSON (any value)" : type]);
+  readonly choices: [string, string][] = dataTypes.map((type): [string, string] => [type, type === "json" ? "JSON (any value)" : type]);
   constructor(readonly options: { key: Key; label: string; default: DataType }) {}
   resolve(value: Value): TypeDescriptor<Value> {
     if (typeof value !== "string" || !dataTypes.includes(value as DataType)) throw new Error(`Select a valid ${this.options.label.toLowerCase()}.`);

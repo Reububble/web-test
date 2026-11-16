@@ -1,15 +1,15 @@
 /** Browser automation and exported pipeline execution for Deno. @module */
-import { BrowserSession } from "web/runtime/browser.ts";
-import type { BrowserLifecycle } from "web/runtime/browser_launcher.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
+import type { BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";
 import type { Page } from "puppeteer";
-import type { Value } from "web/nodes/base.ts";
+import type { Value } from "web-test/nodes/base.ts";
 
-export { BrowserLauncher } from "web/runtime/browser_launcher.ts";
-export type { BrowserLaunchOptions, BrowserLifecycle } from "web/runtime/browser_launcher.ts";
+export { BrowserLauncher } from "web-test/runtime/browser_launcher.ts";
+export type { BrowserLaunchOptions, BrowserLifecycle } from "web-test/runtime/browser_launcher.ts";
 /** The browser page used by an automation session. */
 export type { Page } from "puppeteer";
 /** Runtime values carried by pipeline ports and browser actions. */
-export type { JsonValue, Value } from "web/nodes/base.ts";
+export type { JsonValue, Value } from "web-test/nodes/base.ts";
 
 /** A completed browser action and its screenshot. */
 export interface ActionResult {

@@ -1,6 +1,6 @@
 import { testBrowserLauncher } from "tests/browser_fixture.ts";
 import { assert, assertEquals, assertRejects } from "@std/assert";
-import { BrowserSession } from "web/runtime/browser.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
 Deno.test("script ports preserve instants and nested instant arrays across Firefox BiDi", async () => {
   const session = new BrowserSession(testBrowserLauncher());
   const instant = Temporal.Instant.fromEpochNanoseconds(-123_456_789n);

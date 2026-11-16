@@ -1,9 +1,9 @@
 import type { ElementHandle, JSHandle } from "puppeteer";
-import type { Value } from "web/nodes/base.ts";
-import { isJson, matchesType, readScriptPorts } from "web/script_schema.ts";
-import { isValue, parseValue, stringifyValue } from "web/value.ts";
-import { type BrowserContext, InvalidAction } from "web/nodes/browser_context.ts";
-import { number, text } from "web/nodes/browser_support.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { isJson, matchesType, readScriptPorts } from "web-test/script_schema.ts";
+import { isValue, parseValue, stringifyValue } from "web-test/value.ts";
+import { type BrowserContext, InvalidAction } from "web-test/nodes/browser_context.ts";
+import { number, text } from "web-test/nodes/browser_support.ts";
 export async function runScript(context: BrowserContext, fields: Record<string, unknown>, nodeId: string): Promise<Record<string, Value>> {
   const code = text(fields, "code");
   let inputs, outputs;

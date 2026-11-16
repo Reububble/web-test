@@ -1,5 +1,5 @@
 import { assertEquals, assertRejects, assertThrows } from "@std/assert";
-import { Graph } from "web/graph.ts";
+import { Graph } from "web-test/graph.ts";
 Deno.test("Comments have no ports, persist in graphs and macros, and do not execute", async () => {
   const graph = new Graph(), comment = graph.add("comment", 40, 60), log = graph.add("log", 400, 60);
   comment.properties.text = "Explain this step\nSecond line";

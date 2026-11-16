@@ -1,10 +1,21 @@
-import type { ControlProcess, ControlValues, StepValues } from "web/nodes/control_node.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { ArrayDescriptor, TypeConfig } from "web/nodes/type_descriptor.ts";
-import { arrayItemType } from "web/nodes/data_support.ts";
-import { copyValue } from "web/value.ts";
+import { type ConfigurableControlNodeConstructor, defineNode } from "web-test/nodes/define_node.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { ArrayDescriptor, TypeConfig, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { ControlProcess, ControlValues, StepValues } from "web-test/nodes/control_node.ts";
+import { arrayItemType } from "web-test/nodes/data_support.ts";
+import { copyValue } from "web-test/value.ts";
 
-export const ArrayForEachNode = defineNode({
+export const ArrayForEachNode: ConfigurableControlNodeConstructor<
+  { readonly array: { readonly label: "Array"; readonly type: ArrayDescriptor<Value> } },
+  {
+    readonly index: { readonly label: "Index"; readonly type: "number"; readonly deferred: true };
+    readonly value: { readonly label: "Value"; readonly type: TypeDescriptor<Value>; readonly deferred: true };
+  },
+  readonly ["each", "done"],
+  "flow",
+  { inputs: { array: TypeConfig<"itemType"> } },
+  { resultType: string; result: null }
+> = defineNode({
   type: "array_for_each",
   title: "Array For Each",
   help:

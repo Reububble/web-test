@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
-import { Graph, type Value } from "web/graph.ts";
+import { Graph, type Value } from "web-test/graph.ts";
 Deno.test("Array Join handles separators, mixed values and graph persistence", () => {
   const graph = new Graph(), join = graph.add("array_join", 0, 0), separator = graph.add("text_literal", 0, 0);
   const read = () => join.dataValue("text", (key) => graph.value(join, key));

@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
-import { Graph, type MacroDefinition, type Value } from "web/graph.ts";
+import { Graph, type MacroDefinition, type Value } from "web-test/graph.ts";
 Deno.test("selection macros copy internal links and handles, preserve properties and omit outside blocks", async () => {
   const graph = new Graph(),
     source = graph.add("text_literal", -200, 500),

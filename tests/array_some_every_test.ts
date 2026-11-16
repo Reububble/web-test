@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertRejects } from "@std/assert";
-import { Graph, type Value } from "web/graph.ts";
+import { Graph, type Value } from "web-test/graph.ts";
 const modes = ["array_some", "array_every"] as const;
 Deno.test("Some and Every await predicates, short circuit, and publish a boolean only on Done", async () => {
   for (const mode of modes) {

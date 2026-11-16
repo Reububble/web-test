@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { Graph, inputs, outputs, type Value } from "web/graph.ts";
-import type { DataType } from "web/nodes/base.ts";
+import { Graph, inputs, outputs, type Value } from "web-test/graph.ts";
+import type { DataType } from "web-test/nodes/base.ts";
 Deno.test("Conditional Value selects matching values of every supported type", () => {
   const pairs: [DataType, Value, Value][] = [
     ["text", "yes", "no"],

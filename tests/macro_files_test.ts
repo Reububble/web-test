@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
-import { Graph, type MacroDefinition } from "web/graph.ts";
-import { exportMacroFile, importMacroFile } from "web/macro_files.ts";
+import { Graph, type MacroDefinition } from "web-test/graph.ts";
+import { exportMacroFile, importMacroFile } from "web-test/macro_files.ts";
 Deno.test("macro exports include only reachable dependencies and keep recursive calls runnable", async () => {
   const leaf = new Graph();
   leaf.add("log", 0, 0).properties.message = "leaf";

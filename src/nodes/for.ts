@@ -1,6 +1,19 @@
-import { defineNode } from "web/nodes/define_node.ts";
+import type { ControlNodeConstructor } from "web-test/nodes/control_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
-export const ForNode = defineNode({
+export const ForNode: ControlNodeConstructor<
+  {
+    readonly start: { readonly label: "Start"; readonly type: "number"; readonly default: 0 };
+    readonly end: { readonly label: "End (exclusive)"; readonly type: "number"; readonly default: 10 };
+    readonly step: { readonly label: "Step"; readonly type: "number"; readonly default: 1 };
+  },
+  {
+    readonly index: { readonly label: "Index"; readonly type: "number"; readonly deferred: true };
+    readonly value: { readonly label: "Value"; readonly type: "number"; readonly deferred: true };
+  },
+  readonly ["each", "done"],
+  "flow" | "break"
+> = defineNode({
   type: "for",
   title: "For",
   help:

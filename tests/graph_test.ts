@@ -1,5 +1,5 @@
 import { assert, assertRejects, assertThrows, fail } from "@std/assert";
-import { Graph, inputs, type Value } from "web/graph.ts";
+import { Graph, inputs, type Value } from "web-test/graph.ts";
 Deno.test("concatenation keeps exactly one spare input and stable connected keys", () => {
   const graph = new Graph();
   const concat = graph.add("string_concat", 0, 0);

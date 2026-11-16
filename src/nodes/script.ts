@@ -1,8 +1,17 @@
-import type { Value } from "web/nodes/base.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { readScriptPorts } from "web/script_schema.ts";
-import { runScript } from "web/nodes/script_process.ts";
-export const ScriptNode = defineNode({
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { readScriptPorts } from "web-test/script_schema.ts";
+import { runScript } from "web-test/nodes/script_process.ts";
+export const ScriptNode: DeclarativeNodeConstructor<
+  {
+    readonly flow: { readonly label: "Flow"; readonly type: "flow" };
+    readonly code: { readonly label: "Code"; readonly type: "text" };
+    readonly timeout: { readonly label: "Timeout ms"; readonly type: "number" };
+  },
+  { readonly next: { readonly label: "Next"; readonly type: "flow" } },
+  Record<string, Value>
+> = defineNode({
   kind: "browser",
   type: "script",
   title: "JavaScript",

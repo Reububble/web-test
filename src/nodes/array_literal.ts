@@ -1,10 +1,18 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { arrayInput } from "web/nodes/data_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { arrayInput } from "web-test/nodes/data_support.ts";
 
-const inputs = { value: { label: "Value", type: arrayInput } } as const;
+const inputs: { readonly value: { readonly label: "Value"; readonly type: TypeDescriptor<Value[]> } } = {
+  value: { label: "Value", type: arrayInput },
+} as const;
 
-export const ArrayLiteralNode = defineNode({
+export const ArrayLiteralNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly array: { readonly label: "Array"; readonly type: "array" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "data",
   type: "array_literal",
   title: "Array Variable",

@@ -1,12 +1,12 @@
-import type { Value } from "web/nodes/base.ts";
-import { array } from "web/nodes/array_support.ts";
-import { type TypeDescriptor, typeDescriptor } from "web/nodes/type_descriptor.ts";
+import type { DataType, JsonValue, Value } from "web-test/nodes/base.ts";
+import { array } from "web-test/nodes/array_support.ts";
+import { type TypeDescriptor, typeDescriptor } from "web-test/nodes/type_descriptor.ts";
 
 /** Preserve the text nodes' existing explicit JavaScript string conversion. */
 export const textInput: TypeDescriptor<string> = { ...typeDescriptor("text"), read: (value) => String(value) };
 export const emptyTextInput: TypeDescriptor<string> = { ...typeDescriptor("text"), read: (value) => String(value ?? "") };
 export const arrayInput: TypeDescriptor<Value[]> = { ...typeDescriptor("array"), read: (value) => array(value as Value) };
-export const jsonInput = {
+export const jsonInput: { read(value: unknown): JsonValue; type: DataType; optional?: boolean; defaultValue(): JsonValue } = {
   ...typeDescriptor("json"),
   read(value: unknown) {
     try {
@@ -16,7 +16,12 @@ export const jsonInput = {
     }
   },
 };
-export const elementInput = {
+export const elementInput: {
+  read(value: unknown): { elementId: string } | null;
+  type: DataType;
+  optional?: boolean;
+  defaultValue(): { elementId: string } | null;
+} = {
   ...typeDescriptor("element"),
   read(value: unknown) {
     try {

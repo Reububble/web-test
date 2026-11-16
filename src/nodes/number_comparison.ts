@@ -1,9 +1,16 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
-const inputs = { valueA: { label: "Value A", type: "number" }, valueB: { label: "Value B", type: "number" } } as const;
+const inputs: {
+  readonly valueA: { readonly label: "Value A"; readonly type: "number" };
+  readonly valueB: { readonly label: "Value B"; readonly type: "number" };
+} = { valueA: { label: "Value A", type: "number" }, valueB: { label: "Value B", type: "number" } } as const;
 
-export const NumberComparisonNode = defineNode({
+export const NumberComparisonNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly result: { readonly label: "Result"; readonly type: "boolean" } },
+  DataValues<typeof inputs> & { operator: string }
+> = defineNode({
   kind: "data",
   type: "number_comparison",
   title: "Number Comparison",

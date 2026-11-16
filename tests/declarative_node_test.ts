@@ -1,10 +1,10 @@
 import { assert, assertEquals, assertRejects, assertThrows } from "@std/assert";
-import { Graph, inputs, type NodeType, outputs, type Value } from "web/graph.ts";
-import { nodeClasses } from "web/nodes/index.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { BrowserSession, InvalidAction } from "web/runtime/browser.ts";
-import { GraphRun } from "web/runtime/graph_run.ts";
-import type { RunEvent } from "web/run_events.ts";
+import { Graph, inputs, type NodeType, outputs, type Value } from "web-test/graph.ts";
+import { nodeClasses } from "web-test/nodes/index.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { BrowserSession, InvalidAction } from "web-test/runtime/browser.ts";
+import { GraphRun } from "web-test/runtime/graph_run.ts";
+import type { RunEvent } from "web-test/run_events.ts";
 
 /** Authoring checks remain strict across data, browser and configured-control definitions. */
 export function declarativeNodeTypeChecks(): void {

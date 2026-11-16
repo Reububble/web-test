@@ -1,5 +1,5 @@
-import type { DataType, JsonValue, Value } from "web/nodes/base.ts";
-import { isValue } from "web/value.ts";
+import type { DataType, JsonValue, Value } from "web-test/nodes/base.ts";
+import { isValue } from "web-test/value.ts";
 export interface ScriptPort {
   name: string;
   type: DataType;

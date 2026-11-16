@@ -1,5 +1,6 @@
-import type { Value } from "web/nodes/base.ts";
-import { defineNode } from "web/nodes/define_node.ts";
+import type { ControlNodeConstructor } from "web-test/nodes/control_node.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
 function steps(properties: Record<string, Value>): string[] {
   const value = properties.steps;
@@ -12,7 +13,7 @@ function steps(properties: Record<string, Value>): string[] {
   return value as string[];
 }
 
-export const SequenceNode = defineNode({
+export const SequenceNode: ControlNodeConstructor<{}, {}, string[], "flow"> = defineNode({
   type: "sequence",
   title: "Sequence",
   properties: () => ({ steps: ["step_1"] }),

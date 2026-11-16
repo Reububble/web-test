@@ -1,13 +1,13 @@
-import { copyValue } from "web/value.ts";
-import { acceptsPortType, type BaseNode, listPorts, type NodeType, type PortType, type Value } from "web/nodes/base.ts";
-import { createNode, nodeClasses, type NodeInstance } from "web/nodes/index.ts";
-import { ControlNode, type ControlStep, ControlTransfer } from "web/nodes/control_node.ts";
-import { DeclarativeNode } from "web/nodes/declarative_node.ts";
-export { titles } from "web/nodes/index.ts";
-export type { NodeType, Port, PortType, Value } from "web/nodes/base.ts";
+import { copyValue } from "web-test/value.ts";
+import { acceptsPortType, type BaseNode, listPorts, type NodeType, type Port, type PortType, type Value } from "web-test/nodes/base.ts";
+import { createNode, nodeClasses, type NodeInstance } from "web-test/nodes/index.ts";
+import { ControlNode, type ControlStep, ControlTransfer } from "web-test/nodes/control_node.ts";
+import { DeclarativeNode } from "web-test/nodes/declarative_node.ts";
+export { titles } from "web-test/nodes/index.ts";
+export type { NodeType, Port, PortType, Value } from "web-test/nodes/base.ts";
 export type GraphNode = BaseNode;
-export const inputs = (node: BaseNode) => listPorts(node.inputs);
-export const outputs = (node: BaseNode) => listPorts(node.outputs);
+export const inputs = (node: BaseNode): Port[] => listPorts(node.inputs);
+export const outputs = (node: BaseNode): Port[] => listPorts(node.outputs);
 export const isDataNode = (node: BaseNode) => node.dataOnly;
 export interface Connection {
   id: string;

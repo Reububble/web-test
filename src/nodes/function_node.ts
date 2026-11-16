@@ -1,6 +1,6 @@
-import { BaseNode, type DataType, type NodeType, type ResolveInput, type Value } from "web/nodes/base.ts";
-import { type PortValuesByType, resolveDescriptor, type TypeDescriptor } from "web/nodes/type_descriptor.ts";
-import { copyValue } from "web/value.ts";
+import { BaseNode, type DataType, type NodeType, type ResolveInput, type Value } from "web-test/nodes/base.ts";
+import { type PortValuesByType, resolveDescriptor, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import { copyValue } from "web-test/value.ts";
 
 type Values = Record<string, Value>;
 type InputPort<T extends Value> =

@@ -1,7 +1,16 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import { booleanInput } from "web/nodes/data_support.ts";
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { booleanInput } from "web-test/nodes/data_support.ts";
 
-export const BooleanXnorNode = defineNode({
+export const BooleanXnorNode: DeclarativeNodeConstructor<
+  {
+    readonly valueA: { readonly label: "Value A"; readonly type: TypeDescriptor<boolean> };
+    readonly valueB: { readonly label: "Value B"; readonly type: TypeDescriptor<boolean> };
+  },
+  { readonly result: { readonly label: "Result"; readonly type: "boolean" } },
+  { valueA: boolean; valueB: boolean }
+> = defineNode({
   kind: "data",
   type: "boolean_xnor",
   title: "XNOR",

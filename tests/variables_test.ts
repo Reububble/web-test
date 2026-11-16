@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { Graph, inputs, type NodeType, type Value } from "web/graph.ts";
+import { Graph, inputs, type NodeType, type Value } from "web-test/graph.ts";
 Deno.test("JSON inputs accept typed JSON values without conversion and preserve connections", () => {
   const sources: [NodeType, string, Value][] = [
     ["text_literal", "text", "hello"],

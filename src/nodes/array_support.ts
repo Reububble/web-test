@@ -1,5 +1,5 @@
-import type { DataType, Value } from "web/nodes/base.ts";
-import { dataTypes, matchesType } from "web/script_schema.ts";
+import type { DataType, Value } from "web-test/nodes/base.ts";
+import { dataTypes, matchesType } from "web-test/script_schema.ts";
 export function array(value: Value): Value[] {
   if (!matchesType(value, "array")) throw new Error("Expected an array of pipeline values.");
   return value as Value[];
@@ -12,7 +12,7 @@ export function itemType(value: Value): DataType {
   if (typeof value !== "string" || !dataTypes.includes(value as DataType)) throw new Error("Select a valid item type.");
   return value as DataType;
 }
-export const itemOptions = {
+export const itemOptions: { key: string; label: string; choices: [string, string][]; changesPorts: boolean } = {
   key: "itemType",
   label: "Item type",
   choices: dataTypes.map((type): [string, string] => [type, type === "json" ? "JSON (any value)" : type]),

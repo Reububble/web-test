@@ -1,10 +1,10 @@
 import { assert, assertEquals, assertThrows } from "@std/assert";
-import { copyValue, parseValue, stringifyValue } from "web/value.ts";
-import { Graph } from "web/graph.ts";
-import { GraphRun } from "web/runtime/graph_run.ts";
-import { BrowserSession } from "web/runtime/browser.ts";
-import { isJson, matchesType } from "web/script_schema.ts";
-import type { RunEvent } from "web/run_events.ts";
+import { copyValue, parseValue, stringifyValue } from "web-test/value.ts";
+import { Graph } from "web-test/graph.ts";
+import { GraphRun } from "web-test/runtime/graph_run.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
+import { isJson, matchesType } from "web-test/script_schema.ts";
+import type { RunEvent } from "web-test/run_events.ts";
 Deno.test("instant JSON preserves nanoseconds, negative epochs and the full supported range", () => {
   for (const nanos of [0n, 1n, -1n, -1_000_000_001n, 1_792_728_000_123_456_789n, -8_640_000_000_000_000_000_000n, 8_640_000_000_000_000_000_000n]) {
     const instant = Temporal.Instant.fromEpochNanoseconds(nanos);

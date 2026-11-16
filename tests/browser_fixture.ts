@@ -1,4 +1,4 @@
-import { BrowserLauncher } from "web/runtime/browser_launcher.ts";
+import { BrowserLauncher } from "web-test/runtime/browser_launcher.ts";
 
 /** Test setup deliberately selects Firefox; library runtime code has no browser preference. */
 export function testBrowserLauncher(): BrowserLauncher {

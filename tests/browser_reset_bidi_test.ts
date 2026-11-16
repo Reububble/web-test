@@ -1,10 +1,10 @@
 import { testBrowserLauncher } from "tests/browser_fixture.ts";
 import { assert, assertEquals, assertThrows } from "@std/assert";
 import type { Page } from "puppeteer";
-import { BrowserSession } from "web/runtime/browser.ts";
-import { GraphRun } from "web/runtime/graph_run.ts";
-import { Graph } from "web/graph.ts";
-import type { RunEvent } from "web/run_events.ts";
+import { BrowserSession } from "web-test/runtime/browser.ts";
+import { GraphRun } from "web-test/runtime/graph_run.ts";
+import { Graph } from "web-test/graph.ts";
+import type { RunEvent } from "web-test/run_events.ts";
 Deno.test("Reset Browser closes the session, expires elements and continues the graph", async () => {
   class Session extends BrowserSession {
     pageRequests = 0;

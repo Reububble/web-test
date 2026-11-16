@@ -1,7 +1,13 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import { booleanInput } from "web/nodes/data_support.ts";
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { booleanInput } from "web-test/nodes/data_support.ts";
 
-export const BooleanNotNode = defineNode({
+export const BooleanNotNode: DeclarativeNodeConstructor<
+  { readonly valueA: { readonly label: "Value"; readonly type: TypeDescriptor<boolean> } },
+  { readonly result: { readonly label: "Result"; readonly type: "boolean" } },
+  { valueA: boolean; valueB: boolean }
+> = defineNode({
   kind: "data",
   type: "boolean_not",
   title: "NOT",

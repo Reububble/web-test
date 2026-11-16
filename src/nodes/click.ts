@@ -1,10 +1,19 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { coordinateInput } from "web/nodes/browser_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { coordinateInput } from "web-test/nodes/browser_support.ts";
 
-const inputs = { flow: { label: "Flow", type: "flow" }, x: { label: "X", type: coordinateInput }, y: { label: "Y", type: coordinateInput } } as const;
+const inputs: {
+  readonly flow: { readonly label: "Flow"; readonly type: "flow" };
+  readonly x: { readonly label: "X"; readonly type: TypeDescriptor<string> };
+  readonly y: { readonly label: "Y"; readonly type: TypeDescriptor<string> };
+} = { flow: { label: "Flow", type: "flow" }, x: { label: "X", type: coordinateInput }, y: { label: "Y", type: coordinateInput } } as const;
 
-export const ClickNode = defineNode({
+export const ClickNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly next: { readonly label: "Next"; readonly type: "flow" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "browser",
   type: "click",
   title: "Click",

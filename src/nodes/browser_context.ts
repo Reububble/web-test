@@ -1,5 +1,5 @@
 import type { ElementHandle, Page } from "puppeteer";
-import type { PortValuesByType } from "web/nodes/type_descriptor.ts";
+import type { PortValuesByType } from "web-test/nodes/type_descriptor.ts";
 
 export class InvalidAction extends Error {}
 

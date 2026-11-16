@@ -1,11 +1,16 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { isJson } from "web/script_schema.ts";
-import { textInput } from "web/nodes/data_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { isJson } from "web-test/script_schema.ts";
+import { textInput } from "web-test/nodes/data_support.ts";
 
-const inputs = { text: { label: "Text", type: textInput } } as const;
+const inputs: { readonly text: { readonly label: "Text"; readonly type: TypeDescriptor<string> } } = { text: { label: "Text", type: textInput } } as const;
 
-export const JsonParseNode = defineNode({
+export const JsonParseNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly json: { readonly label: "JSON"; readonly type: "json" }; readonly success: { readonly label: "Valid JSON"; readonly type: "boolean" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "data",
   type: "json_parse",
   title: "JSON Parse",

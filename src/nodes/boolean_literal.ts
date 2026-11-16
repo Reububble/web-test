@@ -1,9 +1,13 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
-const inputs = { value: { label: "Value", type: "boolean" } } as const;
+const inputs: { readonly value: { readonly label: "Value"; readonly type: "boolean" } } = { value: { label: "Value", type: "boolean" } } as const;
 
-export const BooleanLiteralNode = defineNode({
+export const BooleanLiteralNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly boolean: { readonly label: "Boolean"; readonly type: "boolean" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "data",
   type: "boolean_literal",
   title: "Boolean Variable",

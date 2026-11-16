@@ -1,4 +1,4 @@
-import type { GraphEvent } from "web/graph.ts";
+import type { GraphEvent } from "web-test/graph.ts";
 export type RunEvent =
   | { type: "stopped" }
   | GraphEvent

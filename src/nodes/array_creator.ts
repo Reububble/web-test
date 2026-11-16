@@ -1,9 +1,10 @@
-import type { Value } from "web/nodes/base.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { itemOptions, itemType } from "web/nodes/array_support.ts";
-import { arrayItemType } from "web/nodes/data_support.ts";
-import { typeDescriptor } from "web/nodes/type_descriptor.ts";
-import { matchesType } from "web/script_schema.ts";
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { type TypeDescriptor, typeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { JsonValue, Value } from "web-test/nodes/base.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { itemOptions, itemType } from "web-test/nodes/array_support.ts";
+import { arrayItemType } from "web-test/nodes/data_support.ts";
+import { matchesType } from "web-test/script_schema.ts";
 function slots(properties: Record<string, Value>): string[] {
   const value = properties.slots;
   if (!Array.isArray(value) || !value.every((key) => typeof key === "string" && /^item_[1-9]\d*$/.test(key)) || new Set(value).size !== value.length) {
@@ -11,7 +12,17 @@ function slots(properties: Record<string, Value>): string[] {
   }
   return value as string[];
 }
-export const ArrayCreatorNode = defineNode({
+export const ArrayCreatorNode: DeclarativeNodeConstructor<
+  {
+    [k: string]: {
+      label: string;
+      type: TypeDescriptor<Temporal.Instant | Value[] | JsonValue | { elementId: string } | { listenerId: string }>;
+      optional: true;
+    };
+  },
+  { readonly array: { readonly label: "Array"; readonly type: "array" } },
+  Record<string, Value>
+> = defineNode({
   kind: "data",
   type: "array_creator",
   title: "Array Creator",

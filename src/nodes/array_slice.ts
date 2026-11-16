@@ -1,15 +1,24 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { OptionalDescriptor } from "web/nodes/type_descriptor.ts";
-import { arrayInput } from "web/nodes/data_support.ts";
+import { OptionalDescriptor, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { arrayInput } from "web-test/nodes/data_support.ts";
 
-const inputs = {
+const inputs: {
+  readonly array: { readonly label: "Array"; readonly type: TypeDescriptor<Value[]> };
+  readonly start: { readonly label: "Start"; readonly type: "number" };
+  readonly end: { readonly label: "End (exclusive)"; readonly type: OptionalDescriptor<"number">; readonly optional: true };
+} = {
   array: { label: "Array", type: arrayInput },
   start: { label: "Start", type: "number" },
   end: { label: "End (exclusive)", type: new OptionalDescriptor("number"), optional: true },
 } as const;
 
-export const ArraySliceNode = defineNode({
+export const ArraySliceNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly array: { readonly label: "Array"; readonly type: "array" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "data",
   type: "array_slice",
   title: "Array Slice",

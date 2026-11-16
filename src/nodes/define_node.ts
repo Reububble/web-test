@@ -1,7 +1,7 @@
-import { BaseNode, type DataType, type NodeType, type PortRecord, type ResolveInput, type Value } from "web/nodes/base.ts";
-import { type DeclarativeNodeConstructor, defineDeclarativeNode, type NodeDefinition } from "web/nodes/declarative_node.ts";
-import { evaluateFunction, functionDefaults, type FunctionDefinition, type FunctionNode, processFunction } from "web/nodes/function_node.ts";
-import { resolveDescriptor, type TypeConfig, type TypeDescriptor } from "web/nodes/type_descriptor.ts";
+import { BaseNode, type DataType, type NodeType, type PortRecord, type ResolveInput, type Value } from "web-test/nodes/base.ts";
+import { type DeclarativeNodeConstructor, defineDeclarativeNode, type NodeDefinition } from "web-test/nodes/declarative_node.ts";
+import { evaluateFunction, functionDefaults, type FunctionDefinition, type FunctionNode, processFunction } from "web-test/nodes/function_node.ts";
+import { resolveDescriptor, type TypeConfig, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 import {
   type ControlDefinition,
   ControlNode,
@@ -10,7 +10,7 @@ import {
   type ControlPorts,
   type ControlValues,
   defineControlNode,
-} from "web/nodes/control_node.ts";
+} from "web-test/nodes/control_node.ts";
 
 type Values = Record<string, Value>;
 type Config = Record<string, Record<string, TypeConfig>>;
@@ -35,11 +35,42 @@ type ControlBlueprint<Inputs extends ControlPorts, Outputs extends ControlPorts,
   "type" | "title" | "help" | "control" | "config"
 >;
 
+export interface ConfigurableControlNodeConstructor<
+  Inputs extends ControlPorts,
+  Outputs extends ControlPorts,
+  Controls extends readonly string[],
+  Entry extends string,
+  Configuration extends Config,
+  Extra extends Values,
+> {
+  new (x: number, y: number): ControlNodeInstance<Inputs, Outputs, Controls, Entry> & {
+    properties: ControlValues<Inputs> & ConfigProperties<Configuration> & Omit<Extra, keyof ControlValues<Inputs>>;
+  };
+  readonly title: string;
+}
+
+export interface ConfigurableFunctionNodeConstructor<Inputs extends Values, Outputs extends Values, Configuration extends Config> {
+  new (x: number, y: number): ConfigurableFunctionNode<Inputs, Outputs, Configuration>;
+  readonly title: string;
+}
+
+export interface ConfiguredControlBuilder<Configuration extends Config, Controls extends readonly string[], Extra extends Values> {
+  <const Inputs extends ControlPorts, const Outputs extends ControlPorts, Entry extends string>(
+    build: (config: ResolvedConfig<Configuration>) => ControlBlueprint<Inputs, Outputs, Controls, Entry>,
+  ): ConfigurableControlNodeConstructor<Inputs, Outputs, Controls, Entry, Configuration, Extra>;
+}
+
+export interface ConfiguredFunctionBuilder<Configuration extends Config> {
+  <Inputs extends Values, Outputs extends Values>(
+    build: (config: ResolvedConfig<Configuration>) => FunctionDefinition<Inputs, Outputs>,
+  ): ConfigurableFunctionNodeConstructor<Inputs, Outputs, Configuration>;
+}
+
 export function defineNode<Configuration extends Config, const Controls extends readonly string[], Extra extends Values = Record<never, never>>(
   metadata: ConfigControlMetadata<Configuration, Controls, Extra>,
-): ReturnType<typeof defineConfiguredControlNode<Configuration, Controls, Extra>>;
+): ConfiguredControlBuilder<Configuration, Controls, Extra>;
 
-export function defineNode<Configuration extends Config>(metadata: ConfigMetadata<Configuration>): ReturnType<typeof defineConfiguredNode<Configuration>>;
+export function defineNode<Configuration extends Config>(metadata: ConfigMetadata<Configuration>): ConfiguredFunctionBuilder<Configuration>;
 export function defineNode<const Inputs extends PortRecord, const Outputs extends PortRecord, Properties extends Values, State extends object = object>(
   metadata: NodeDefinition<Inputs, Outputs, Properties, State>,
 ): DeclarativeNodeConstructor<Inputs, Outputs, Properties>;
@@ -65,20 +96,12 @@ export function defineNode(metadata: object): unknown {
 
 function defineConfiguredControlNode<Configuration extends Config, const Controls extends readonly string[], Extra extends Values>(
   metadata: ConfigControlMetadata<Configuration, Controls, Extra>,
-) {
+): ConfiguredControlBuilder<Configuration, Controls, Extra> {
   const selections = Object.entries(metadata.config).flatMap(([group, fields]) => Object.entries(fields).map(([key, field]) => ({ group, key, field })));
   const options = selections.map(({ field }) => ({ key: field.options.key, label: field.options.label, choices: field.choices, changesPorts: true }));
   return function <const Inputs extends ControlPorts, const Outputs extends ControlPorts, Entry extends string>(
     build: (config: ResolvedConfig<Configuration>) => ControlBlueprint<Inputs, Outputs, Controls, Entry>,
-  ): {
-    new (
-      x: number,
-      y: number,
-    ): ControlNodeInstance<Inputs, Outputs, Controls, Entry> & {
-      properties: ControlValues<Inputs> & ConfigProperties<Configuration> & Omit<Extra, keyof ControlValues<Inputs>>;
-    };
-    readonly title: string;
-  } {
+  ): ConfigurableControlNodeConstructor<Inputs, Outputs, Controls, Entry, Configuration, Extra> {
     return class extends ControlNode {
       static readonly title = metadata.title;
       readonly title = metadata.title;
@@ -155,15 +178,14 @@ function defineConfiguredControlNode<Configuration extends Config, const Control
   };
 }
 
-function defineConfiguredNode<Configuration extends Config>(metadata: ConfigMetadata<Configuration>) {
+function defineConfiguredNode<Configuration extends Config>(metadata: ConfigMetadata<Configuration>): ConfiguredFunctionBuilder<Configuration> {
   const selections = Object.entries(metadata.config).flatMap(([group, fields]) => Object.entries(fields).map(([key, field]) => ({ group, key, field })));
   const keys = selections.map(({ field }) => field.options.key);
   if (new Set(keys).size !== keys.length) throw new Error("Configuration properties must have unique keys.");
   const options = selections.map(({ field }) => ({ key: field.options.key, label: field.options.label, choices: field.choices, changesPorts: true }));
-  return function <Inputs extends Values, Outputs extends Values>(build: (config: ResolvedConfig<Configuration>) => FunctionDefinition<Inputs, Outputs>): {
-    new (x: number, y: number): ConfigurableFunctionNode<Inputs, Outputs, Configuration>;
-    readonly title: string;
-  } {
+  return function <Inputs extends Values, Outputs extends Values>(
+    build: (config: ResolvedConfig<Configuration>) => FunctionDefinition<Inputs, Outputs>,
+  ): ConfigurableFunctionNodeConstructor<Inputs, Outputs, Configuration> {
     return class extends BaseNode implements ConfigurableFunctionNode<Inputs, Outputs, Configuration> {
       static readonly title = metadata.title;
       readonly title = metadata.title;

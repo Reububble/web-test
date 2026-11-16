@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows, fail } from "@std/assert";
-import { Graph, type NodeType } from "web/graph.ts";
+import { Graph, type NodeType } from "web-test/graph.ts";
 Deno.test("number comparisons cover ordering and equality with strictly numeric inputs", () => {
   const graph = new Graph(), compare = graph.add("number_comparison", 0, 0);
   const cases: [string, boolean[]][] = [

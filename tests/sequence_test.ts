@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertRejects } from "@std/assert";
-import { Graph, outputs, type Value } from "web/graph.ts";
+import { Graph, outputs, type Value } from "web-test/graph.ts";
 
 Deno.test("Sequence keeps connected output identities and exactly one spare through edits and graph files", () => {
   const graph = new Graph(), sequence = graph.add("sequence", 0, 0);

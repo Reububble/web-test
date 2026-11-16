@@ -1,10 +1,15 @@
-import type { Value } from "web/nodes/base.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { emptyTextInput } from "web/nodes/data_support.ts";
-import type { TypeDescriptor } from "web/nodes/type_descriptor.ts";
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { emptyTextInput } from "web-test/nodes/data_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 const tokens = /{{|}}|{([A-Za-z_][A-Za-z0-9_]*)}/g;
 const names = (template: string): string[] => [...new Set([...template.matchAll(tokens)].flatMap((match) => match[1] ? [match[1]] : []))];
-export const StringFormatNode = defineNode({
+export const StringFormatNode: DeclarativeNodeConstructor<
+  Record<string, { label: string; type: TypeDescriptor<string> }>,
+  { readonly text: { readonly label: "Text"; readonly type: "text" } },
+  Record<string, Value>
+> = defineNode({
   kind: "data",
   type: "string_format",
   title: "String Format",

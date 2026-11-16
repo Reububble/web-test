@@ -1,10 +1,18 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { textInput } from "web/nodes/data_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { textInput } from "web-test/nodes/data_support.ts";
 
-const inputs = { valueA: { label: "Value A", type: textInput }, valueB: { label: "Value B", type: textInput } } as const;
+const inputs: {
+  readonly valueA: { readonly label: "Value A"; readonly type: TypeDescriptor<string> };
+  readonly valueB: { readonly label: "Value B"; readonly type: TypeDescriptor<string> };
+} = { valueA: { label: "Value A", type: textInput }, valueB: { label: "Value B", type: textInput } } as const;
 
-export const ComparisonNode = defineNode({
+export const ComparisonNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly result: { readonly label: "Result"; readonly type: "boolean" } },
+  DataValues<typeof inputs> & { operator: string }
+> = defineNode({
   kind: "data",
   type: "comparison",
   title: "Comparison",

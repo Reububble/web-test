@@ -1,10 +1,27 @@
-import type { ControlProcess, ControlValues, StepValues } from "web/nodes/control_node.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { ArrayDescriptor, TypeConfig } from "web/nodes/type_descriptor.ts";
-import { arrayItemType } from "web/nodes/data_support.ts";
-import { copyValue } from "web/value.ts";
+import { type ConfigurableControlNodeConstructor, defineNode } from "web-test/nodes/define_node.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { ArrayDescriptor, TypeConfig, type TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { ControlProcess, ControlValues, StepValues } from "web-test/nodes/control_node.ts";
+import { arrayItemType } from "web-test/nodes/data_support.ts";
+import { copyValue } from "web-test/value.ts";
 
-export const ArrayReduceNode = defineNode({
+export const ArrayReduceNode: ConfigurableControlNodeConstructor<
+  {
+    readonly array: { readonly label: "Array"; readonly type: ArrayDescriptor<Value> };
+    readonly initial: { readonly label: "Initial value"; readonly type: TypeDescriptor<Value>; readonly syncDefault: true };
+    readonly result: { readonly label: "Result"; readonly type: TypeDescriptor<Value>; readonly syncDefault: true };
+  },
+  {
+    readonly index: { readonly label: "Index"; readonly type: "number"; readonly deferred: true };
+    readonly value: { readonly label: "Value"; readonly type: TypeDescriptor<Value>; readonly deferred: true };
+    readonly accumulator: { readonly label: "Accumulator"; readonly type: TypeDescriptor<Value>; readonly deferred: true };
+    readonly result: { readonly label: "Completed result"; readonly type: TypeDescriptor<Value>; readonly deferred: true };
+  },
+  readonly ["each", "done"],
+  "flow",
+  { inputs: { array: TypeConfig<"itemType"> }; outputs: { result: TypeConfig<"resultType"> } },
+  { result: null }
+> = defineNode({
   type: "array_reduce",
   title: "Array Reduce",
   help:

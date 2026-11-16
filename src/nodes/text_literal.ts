@@ -1,10 +1,15 @@
-import { defineNode } from "web/nodes/define_node.ts";
-import type { DataValues } from "web/nodes/declarative_node.ts";
-import { textInput } from "web/nodes/data_support.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { DataValues, DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { textInput } from "web-test/nodes/data_support.ts";
 
-const inputs = { value: { label: "Value", type: textInput } } as const;
+const inputs: { readonly value: { readonly label: "Value"; readonly type: TypeDescriptor<string> } } = { value: { label: "Value", type: textInput } } as const;
 
-export const TextLiteralNode = defineNode({
+export const TextLiteralNode: DeclarativeNodeConstructor<
+  typeof inputs,
+  { readonly text: { readonly label: "Text"; readonly type: "text" } },
+  DataValues<typeof inputs>
+> = defineNode({
   kind: "data",
   type: "text_literal",
   title: "Text Variable",

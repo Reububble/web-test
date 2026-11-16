@@ -1,5 +1,5 @@
 /** JSON encoding and copying for pipeline values and their containing records. */
-import type { Value } from "web/nodes/base.ts";
+import type { Value } from "web-test/nodes/base.ts";
 /** Validate runtime values, including instants nested in arrays or records. */
 
 export function isValue(value: unknown, seen = new Set<object>(), depth = 0): value is Value {

@@ -1,6 +1,11 @@
-import { defineNode } from "web/nodes/define_node.ts";
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
 
-export const RemoveListenerNode = defineNode({
+export const RemoveListenerNode: DeclarativeNodeConstructor<
+  { readonly flow: { readonly label: "Flow"; readonly type: "flow" }; readonly listener: { readonly label: "Listener"; readonly type: "listener" } },
+  { readonly next: { readonly label: "Next"; readonly type: "flow" }; readonly removed: { readonly label: "Removed"; readonly type: "boolean" } },
+  { listener: null }
+> = defineNode({
   kind: "action",
   type: "remove_listener",
   title: "Remove Listener",

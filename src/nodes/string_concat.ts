@@ -1,7 +1,13 @@
-import type { Value } from "web/nodes/base.ts";
-import { defineNode } from "web/nodes/define_node.ts";
-import { emptyTextInput } from "web/nodes/data_support.ts";
-export const StringConcatNode = defineNode({
+import type { DeclarativeNodeConstructor } from "web-test/nodes/declarative_node.ts";
+import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
+import type { Value } from "web-test/nodes/base.ts";
+import { defineNode } from "web-test/nodes/define_node.ts";
+import { emptyTextInput } from "web-test/nodes/data_support.ts";
+export const StringConcatNode: DeclarativeNodeConstructor<
+  { [k: string]: { label: string; type: TypeDescriptor<string> } },
+  { readonly text: { readonly label: "Text"; readonly type: "text" } },
+  Record<string, Value>
+> = defineNode({
   kind: "data",
   type: "string_concat",
   title: "String Concatenate",
