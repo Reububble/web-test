@@ -3,6 +3,11 @@ import type { TypeDescriptor } from "web-test/nodes/type_descriptor.ts";
 type BuiltinNodeType = "navigate" | "click" | "extract_text" | "conditional" | "comparison" | "text_literal" | "boolean_literal";
 /** Additional built-in node identifiers beyond the original browser and literal node catalog. */
 export type ExtraNodeType =
+  | "pointer_down"
+  | "pointer_move"
+  | "pointer_up"
+  | "release_inputs"
+  | "viewport_size"
   | "comment"
   | "fail"
   | "try_catch_finally"
