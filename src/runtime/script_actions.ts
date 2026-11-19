@@ -2,6 +2,11 @@
 export const scriptActions = {
   navigate: { action: "navigate", inputs: ["url"] },
   click: { action: "click", inputs: ["x", "y"] },
+  pointerDown: { action: "pointer_down", inputs: ["x", "y", "pointerType"] },
+  pointerMove: { action: "pointer_move", inputs: ["x", "y", "pointerType"] },
+  pointerUp: { action: "pointer_up", inputs: ["pointerType"] },
+  releaseInputs: { action: "release_inputs", inputs: [] },
+  viewportSize: { action: "viewport_size", inputs: ["width", "height"] },
   scrapeText: { action: "extract_text", inputs: ["selector"] },
   querySelector: { action: "query_selector", inputs: ["selector"] },
   querySelectorAll: { action: "query_selector_all", inputs: ["selector"] },

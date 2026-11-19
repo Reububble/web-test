@@ -3,6 +3,8 @@ import { MacroNode } from "web-test/nodes/macro.ts";
 import { CommentNode } from "web-test/nodes/comment.ts";
 import { NavigateNode } from "web-test/nodes/navigate.ts";
 import { ClickNode } from "web-test/nodes/click.ts";
+import { PointerDownNode, PointerMoveNode, PointerUpNode, ReleaseInputsNode } from "web-test/nodes/pointer.ts";
+import { ViewportSizeNode } from "web-test/nodes/viewport_size.ts";
 import { ScrapeTextNode } from "web-test/nodes/scrape_text.ts";
 import { IfNode } from "web-test/nodes/if.ts";
 import { ComparisonNode } from "web-test/nodes/comparison.ts";
@@ -85,6 +87,11 @@ export const nodeClasses = {
   array_to_json: ArrayToJsonNode,
   navigate: NavigateNode,
   click: ClickNode,
+  pointer_down: PointerDownNode,
+  pointer_move: PointerMoveNode,
+  pointer_up: PointerUpNode,
+  release_inputs: ReleaseInputsNode,
+  viewport_size: ViewportSizeNode,
   extract_text: ScrapeTextNode,
   conditional: IfNode,
   comparison: ComparisonNode,
@@ -134,6 +141,11 @@ export const titles = Object.fromEntries(Object.entries(nodeClasses).map(([key, 
 export const nodeCategories: Record<NodeType, string> = {
   navigate: "Browser",
   click: "Browser",
+  pointer_down: "Browser",
+  pointer_move: "Browser",
+  pointer_up: "Browser",
+  release_inputs: "Browser",
+  viewport_size: "Browser",
   page_info: "Browser",
   delay: "Browser",
   reset_browser: "Browser",
